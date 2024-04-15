@@ -31,7 +31,6 @@ def solicita_conexao(id_aplicacao, data):
     data = f"{id_aplicacao} - {data}"
     sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
     print(f"Dados enviados: {data}")
-    time.sleep(5)  # Envia dados a cada 5 segundos
     sock.close()
 
 def generate_temperature():
@@ -44,7 +43,7 @@ if __name__ == '__main__':
         print(broker_info)
         temp = generate_temperature()
         solicita_conexao('teste', temp)
-        time.sleep(5)
+        time.sleep(2)
 
 # FLUXO:
 # ATIVA SERVIDOR TCP -> RECEBE SOLICITAÇÃO DO BROKER -> SOLICITA CONEXÃO -> RESPONDE A TEMPERATURA PARA O BROKER 

@@ -28,9 +28,11 @@ def solicita_conexao(id_aplicacao, comando):
         sock_tcp.sendall(data.encode())
         print(f"Dados enviados via TCP: {data}")
         sock_tcp.close()
+        return True
     except Exception as e:
         print(f"Erro ao enviar dados via TCP: {e}")
-        time.sleep(5)
+        time.sleep(2)
+        return False
 
 def main():
     threads = []
@@ -54,7 +56,7 @@ if __name__ == '__main__':
     while True:
         print("Broker Startado")
         input("Para enviar a solicitação, clique em enter.")
-        solicita_conexao('teste', 'temperatura_atual')
-        sensor_infos = recebe_conexao()
-        time.sleep(5)
+        if solicita_conexao('teste', 'temperatura_atual'):
+            sensor_infos = recebe_conexao()
+        time.sleep(2)
         # daqui devolve como response da API
