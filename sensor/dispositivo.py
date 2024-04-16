@@ -7,43 +7,44 @@ import random
 import time
 
 HOST = '0.0.0.0'
-SERVER_IP = '' # IP do servidor
-TCP_PORT = 12345  # Porta para comunicação TCP
-UDP_PORT = 54321  # Porta para comunicação UDP
+SERVER_IP = '127.0.0.1' # IP do servidor
+TCP_PORT = 12345  # Porta para comunicação TCP - porta do dispositivo
+UDP_PORT = 54321  # Porta para comunicação UDP - porta do broker
 SENSOR_ID = 'sensor1'  # Identificador do sensor
 
-def recebe_conexao(): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RECEBE CONEXÃO ANTES DO BROKER.
-    global HOST, TCP_PORT
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind((HOST, TCP_PORT))
-    server.listen(1) #Só escuta de um broker
+def recebe_conexao(server): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RECEBE CONEXÃO ANTES DO BROKER.
     conexao, client_addr = server.accept()
     data = conexao.recv(1024).decode()
     print(f"Dispositivo conectado: {client_addr}") # broker
-    print(f'Dados: {data}')
+    print(f'Dados recebidos: {data}')
     # lidar com os comandos. retornar o id_aplicacao junto com o dados em solicita conexao 
     conexao.close()
-    server.close()
+
     return client_addr, data
 
-def solicita_conexao(id_aplicacao, data):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    data = f"{id_aplicacao} - {data}"
+def solicita_conexao(id_aplicacao, data, sock):
+    data = f"{SENSOR_ID} - {id_aplicacao} - {data}"
     sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
     print(f"Dados enviados: {data}")
-    sock.close()
 
 def generate_temperature():
     return round(random.uniform(20, 30), 2)  # Simula temperatura entre 20°C e 30°C
 
 if __name__ == '__main__':
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((HOST, TCP_PORT))
+    server.listen(1) #Só escuta de um broker
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     while True:
         print("Dispositivo Startado")
-        broker_info = recebe_conexao()
+        broker_info = recebe_conexao(server)
         print(broker_info)
         temp = generate_temperature()
-        solicita_conexao('teste', temp)
+        solicita_conexao('teste', temp, sock)
         time.sleep(2)
+    conexao.close()
+    server.close()
+    sock.close()
 
 # FLUXO:
 # ATIVA SERVIDOR TCP -> RECEBE SOLICITAÇÃO DO BROKER -> SOLICITA CONEXÃO -> RESPONDE A TEMPERATURA PARA O BROKER 
