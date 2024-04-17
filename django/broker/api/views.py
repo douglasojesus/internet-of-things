@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 class MyAPIView(APIView):
     def get(self, request):
-        return Response({"message": "nada a ser enviado"})
+        return Response({"message": "tem que devolver todos os dispositivos cadastrados"})
 
     def post(self, request):
         # verifica o tipo de solicitação. se é temperatura, etc.
