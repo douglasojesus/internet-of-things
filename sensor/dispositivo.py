@@ -23,7 +23,7 @@ def recebe_conexao(server): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RE
     return client_addr, data
 
 def solicita_conexao(id_aplicacao, data, sock):
-    data = f"{SENSOR_ID} - {id_aplicacao} - {data}"
+    data = f"{data}"
     sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
     print(f"Dados enviados: {data}")
 
