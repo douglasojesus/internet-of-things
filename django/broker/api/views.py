@@ -5,10 +5,15 @@ from .scripts.conection_sensor import solicita_conexao, recebe_conexao, main
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from .models import Dispositivo
+from django.core.serializers import serialize
 
 class MyAPIView(APIView):
     def get(self, request):
-        return Response({"message": "tem que devolver todos os dispositivos cadastrados"})
+        dispositivos = Dispositivo.objects.all()
+        # Serializa os objetos Dispositivo em JSON
+        dispositivos_json = serialize('json', dispositivos)
+        return Response(dispositivos_json)
 
     def post(self, request):
         # verifica o tipo de solicitação. se é temperatura, etc.
