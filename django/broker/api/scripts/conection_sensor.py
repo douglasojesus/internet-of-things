@@ -18,10 +18,10 @@ def recebe_conexao(): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RECEBE C
     server_udp.close()
     return addr, data
 
-def solicita_conexao(id_aplicacao, comando):
+def solicita_conexao(comando):
     global DISPOSITIVO_IP, TCP_PORT
     try:
-        data = f"{id_aplicacao} - {comando}"
+        data = f"{comando}"
         sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock_tcp.connect((DISPOSITIVO_IP, TCP_PORT))
         sock_tcp.sendall(data.encode())
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     while True:
         print("Broker Startado")
         input("Para enviar a solicitação, clique em enter.")
-        if solicita_conexao('teste', 'temperatura_atual'):
+        if solicita_conexao('Temperatura'):
             sensor_infos = recebe_conexao()
         time.sleep(2)
         # daqui devolve como response da API

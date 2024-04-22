@@ -18,7 +18,20 @@ class MyAPIView(APIView):
     def post(self, request):
         # verifica o tipo de solicitação. se é temperatura, etc.
         # Acessando os dados enviados pelo usuário no corpo da requisição
-        dados = request.data # formato: {"valor": "Temperatura"}
+        dados = request.data # formato: {"valor": "Temperatura"} -> {"id": }
+        try:
+            dispositivo_id = dados.get('id')
+            dispositivo = Dispositivo.objects.get(pk=dispositivo_id)
+            if solicita_conexao(dispositivo.tipo_medicao):
+                addr, data = recebe_conexao()
+            dispositivo.medicao_atual = data
+            return Response({'value': dispositivo.medicao_atual})
+        except Dispositivo.DoesNotExist:
+            return Response({'error': 'Dispositivo não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
         # retorna o dado solicitado
         resultado = dados #valor pego do connection_sensor
         
