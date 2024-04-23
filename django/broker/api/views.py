@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .scripts.conection_sensor import solicita_conexao, recebe_conexao, main
+from .scripts.conection_sensor import solicita_conexao, recebe_conexao, recebe_porta_do_dispositivo
 
 
 from rest_framework import status
@@ -40,6 +40,14 @@ class MyAPIView(APIView):
                     return Response({'value': dispositivo.medicao_atual}, status=status.HTTP_201_CREATED)
                 else:
                     return Response({'error': 'Dispositivo nao esta ligado.'})
+            elif dados.get('comando') == 'adicionar_dispositivo':
+                novo_dispositivo = recebe_porta_do_dispositivo()
+                dispositivo = Dispositivo()
+                dispositivo.tipo_medicao = dados.get('tipo_medicao')
+                dispositivo.porta = novo_dispositivo[1]
+                dispositivo.nome = novo_dispositivo[0]
+                dispositivo.save()
+
             else:
                 return Response({'error': 'Dispositivo so aceita os comandos: ligar, desligar, dados.', 'formato': '{"id": numero, "comando": "comando"}'})
         except Dispositivo.DoesNotExist:

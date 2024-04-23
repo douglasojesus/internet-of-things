@@ -64,10 +64,12 @@ def main():
 # ATIVA SERVIDOR UDP -> RECEBE REQUISIÇÃO -> SOLICITA CONEXÃO -> RECEBE CONEXÃO -> RESPONDE REQUISIÇÃO 
 
 if __name__ == '__main__':
-    while True:
+    dispositivo = recebe_porta_do_dispositivo()
+    print(dispositivo)
+    """while True:
         print("Broker Startado")
         input("Para enviar a solicitação, clique em enter.")
         if solicita_conexao('Temperatura'):
             sensor_infos = recebe_conexao()
         time.sleep(2)
-        # daqui devolve como response da API
+        # daqui devolve como response da API"""
