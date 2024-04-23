@@ -18,32 +18,34 @@ class MyAPIView(APIView):
     def post(self, request):
         # verifica o tipo de solicitação. se é temperatura, etc.
         # Acessando os dados enviados pelo usuário no corpo da requisição
-        dados = request.data # formato: {"valor": "Temperatura"} -> {"id": , "comando": ""}
+        dados = request.data 
         try:
             dispositivo_id = dados.get('id')
             dispositivo = Dispositivo.objects.get(pk=dispositivo_id)
             if dados.get('comando') == "ligar":
                 dispositivo.esta_ativo = True
                 dispositivo.save()
-                return Response({'value:': 'ligado'}, status=status.HTTP_201_CREATED)
+                return Response({'value': 'ligado'}, status=status.HTTP_201_CREATED)
             elif dados.get('comando') == 'desligar':
                 dispositivo.esta_ativo = False
                 dispositivo.save()
-                return Response({'value:': 'desligado'}, status=status.HTTP_201_CREATED)
+                return Response({'value': 'desligado'}, status=status.HTTP_201_CREATED)
             elif dados.get('comando') == 'dados':
                 if dispositivo.esta_ativo:
-                    if solicita_conexao(dispositivo.tipo_medicao):
+                    if solicita_conexao(id, dispositivo.tipo_medicao):
                         addr, data = recebe_conexao()
                     print(data)
                     dispositivo.medicao_atual = data
                     dispositivo.save()
                     return Response({'value': dispositivo.medicao_atual}, status=status.HTTP_201_CREATED)
                 else:
-                    return Response({'error': 'Dispositivo não está ligado.'})
+                    return Response({'error': 'Dispositivo nao esta ligado.'})
             else:
-                return Response({'error': 'Dispositivo só aceita os comandos: ligar, desligar, dados.', 'formato': '{"id": numero, "comando": "comando"}'})
+                return Response({'error': 'Dispositivo so aceita os comandos: ligar, desligar, dados.', 'formato': '{"id": numero, "comando": "comando"}'})
         except Dispositivo.DoesNotExist:
-            return Response({'error': 'Dispositivo não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Dispositivo nao encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        except UnboundLocalError:
+            return Response({'error': 'Dispositivo pode estar fora da tomada.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

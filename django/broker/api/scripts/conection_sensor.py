@@ -18,7 +18,7 @@ def recebe_conexao(): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RECEBE C
     server_udp.close()
     return addr, data
 
-def solicita_conexao(comando):
+def solicita_conexao(id, comando):
     global DISPOSITIVO_IP, TCP_PORT
     try:
         data = f"{comando}"
