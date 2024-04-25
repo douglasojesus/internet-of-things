@@ -73,10 +73,16 @@ while True:
                 print(response)
         elif opcao == "5":
             tipo_medicao = input("Informe o tipo de medição que o dispositivo faz: ")
-            response = requests.post(url, data={"tipo_medicao": tipo_medicao, "comando": "adicionar_dispositivo"})
-
             print("Conecte o novo dispositivo na tomada.")
-            time.sleep(2)
+            response = requests.post(url, data={"tipo_medicao": tipo_medicao, "comando": "adicionar_dispositivo"})
+            response = eval(response.content)
+            print("RESPONSE: ", response)
+            if ('value' in response) and (response['value'] == 'dispositivo salvo'):
+                print("Dispositivo salvo no Broker.")
+            else:
+                print("Dispositivo não foi salvo no Broker.")
+
+
 
 
 

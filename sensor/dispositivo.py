@@ -27,6 +27,19 @@ def solicita_conexao(id_aplicacao, data, sock):
     sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
     print(f"Dados enviados: {data}")
 
+def envia_porta_para_broker(server):
+    while True:
+        time.sleep(2)
+        data = f"('{SENSOR_ID}', {TCP_PORT})"
+        sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
+        recebido = recebe_conexao(server)
+        print("oi")
+        print(recebido)
+        if recebido[1] == "recebido":
+            break
+    print("tudo ok")
+
+
 def generate_temperature():
     return round(random.uniform(20, 30), 2)  # Simula temperatura entre 20°C e 30°C
 
@@ -35,6 +48,7 @@ if __name__ == '__main__':
     server.bind((HOST, TCP_PORT))
     server.listen(1) #Só escuta de um broker
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    envia_porta_para_broker(server)
     while True:
         print("Dispositivo Startado")
         broker_info = recebe_conexao(server)

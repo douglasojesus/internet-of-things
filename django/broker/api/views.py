@@ -20,36 +20,38 @@ class MyAPIView(APIView):
         # Acessando os dados enviados pelo usuário no corpo da requisição
         dados = request.data 
         try:
-            dispositivo_id = dados.get('id')
-            dispositivo = Dispositivo.objects.get(pk=dispositivo_id)
-            if dados.get('comando') == "ligar":
-                dispositivo.esta_ativo = True
-                dispositivo.save()
-                return Response({'value': 'ligado'}, status=status.HTTP_201_CREATED)
-            elif dados.get('comando') == 'desligar':
-                dispositivo.esta_ativo = False
-                dispositivo.save()
-                return Response({'value': 'desligado'}, status=status.HTTP_201_CREATED)
-            elif dados.get('comando') == 'dados':
-                if dispositivo.esta_ativo:
-                    if solicita_conexao(id, dispositivo.tipo_medicao):
-                        addr, data = recebe_conexao()
-                    print(data)
-                    dispositivo.medicao_atual = data
-                    dispositivo.save()
-                    return Response({'value': dispositivo.medicao_atual}, status=status.HTTP_201_CREATED)
-                else:
-                    return Response({'error': 'Dispositivo nao esta ligado.'})
-            elif dados.get('comando') == 'adicionar_dispositivo':
+            if dados.get('comando') == 'adicionar_dispositivo':
                 novo_dispositivo = recebe_porta_do_dispositivo()
+                print("DADOOOOOOOOOOOOOOOOOOOOOOOS: " + str(novo_dispositivo))
                 dispositivo = Dispositivo()
                 dispositivo.tipo_medicao = dados.get('tipo_medicao')
                 dispositivo.porta = novo_dispositivo[1]
                 dispositivo.nome = novo_dispositivo[0]
                 dispositivo.save()
-
+                return Response({'value': 'dispositivo salvo'})
             else:
-                return Response({'error': 'Dispositivo so aceita os comandos: ligar, desligar, dados.', 'formato': '{"id": numero, "comando": "comando"}'})
+                dispositivo_id = dados.get('id')
+                dispositivo = Dispositivo.objects.get(pk=dispositivo_id)
+                if dados.get('comando') == "ligar":
+                    dispositivo.esta_ativo = True
+                    dispositivo.save()
+                    return Response({'value': 'ligado'}, status=status.HTTP_201_CREATED)
+                elif dados.get('comando') == 'desligar':
+                    dispositivo.esta_ativo = False
+                    dispositivo.save()
+                    return Response({'value': 'desligado'}, status=status.HTTP_201_CREATED)
+                elif dados.get('comando') == 'dados':
+                    if dispositivo.esta_ativo:
+                        if solicita_conexao(id, dispositivo.tipo_medicao):
+                            addr, data = recebe_conexao()
+                        print(data)
+                        dispositivo.medicao_atual = data
+                        dispositivo.save()
+                        return Response({'value': dispositivo.medicao_atual}, status=status.HTTP_201_CREATED)
+                    else:
+                        return Response({'error': 'Dispositivo nao esta ligado.'})              
+                else:
+                    return Response({'error': 'Dispositivo so aceita os comandos: ligar, desligar, dados.', 'formato': '{"id": numero, "comando": "comando"}'})
         except Dispositivo.DoesNotExist:
             return Response({'error': 'Dispositivo nao encontrado.'}, status=status.HTTP_404_NOT_FOUND)
         except UnboundLocalError:
