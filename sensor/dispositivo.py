@@ -7,11 +7,9 @@ import random
 import time
 
 HOST = '0.0.0.0'
-SERVER_IP = '127.0.0.1' # IP do servidor
-TCP_PORT = 12343  # Porta para comunicação TCP - porta do dispositivo
 UDP_PORT = 54321  # Porta para comunicação UDP - porta do broker
 SENSOR_ID = 'sensor1'  # Identificador do sensor
-MEU_IP = '127.0.0.1'
+MEU_IP = socket.gethostbyname(socket.gethostname())
 
 def recebe_conexao(server): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RECEBE CONEXÃO ANTES DO BROKER.
     conexao, client_addr = server.accept()
@@ -23,12 +21,12 @@ def recebe_conexao(server): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RE
 
     return client_addr, data
 
-def solicita_conexao(id_aplicacao, data, sock):
+def solicita_conexao(id_aplicacao, data, sock, SERVER_IP):
     data = f"{data}"
     sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
     print(f"Dados enviados: {data}")
 
-def envia_porta_para_broker(server):
+def envia_porta_para_broker(server, SERVER_IP, TCP_PORT):
     while True:
         time.sleep(2)
         data = f"('{SENSOR_ID}', {TCP_PORT}, '{MEU_IP}')"
@@ -45,20 +43,21 @@ def generate_temperature():
     return round(random.uniform(20, 30), 2)  # Simula temperatura entre 20°C e 30°C
 
 if __name__ == '__main__':
+    SERVER_IP = input("Qual o IP do servidor? >> ")
+    TCP_PORT = int(input("Qual a porta desse dispositivo? >> "))
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, TCP_PORT))
     server.listen(1) #Só escuta de um broker
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     entrada = int(input("1 - se dispositivo já foi instalado no broker.\n2 - se dispositivo vai ser instalado agora\n>> "))
     if entrada == 2:
-        print("entrei")
-        envia_porta_para_broker(server)
+        envia_porta_para_broker(server, SERVER_IP, TCP_PORT)
     while True:
         print("Dispositivo Startado")
         broker_info = recebe_conexao(server)
         print(broker_info)
         temp = generate_temperature()
-        solicita_conexao('teste', temp, sock)
+        solicita_conexao('teste', temp, sock, SERVER_IP)
         time.sleep(2)
     conexao.close()
     server.close()

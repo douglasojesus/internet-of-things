@@ -40,7 +40,7 @@ def ver_todos_dispositivos():
     print()
     for item in lista_dispositivos:
         esta_ativo = '\033[92m Está ligado. \033[0m' if item.esta_ativo else '\033[91m Está desligado. \033[0m'
-        print("ID: " + str(item.id) + " - Tipo de Medição: " + item.tipo_medicao + " - " + esta_ativo)
+        print("ID: " + str(item.id) + " - Medição: " + item.tipo_medicao + " - " + esta_ativo) #colocar a porta e o ip
 
 while True:
     opcao = menu()
