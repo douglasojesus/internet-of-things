@@ -7,8 +7,8 @@ class Dispositivo(models.Model):
     esta_ativo = models.BooleanField(default=False)
     porta = models.IntegerField()
     nome = models.CharField(max_length=50)
+    ip = models.CharField(max_length=30)
 
     def __str__(self) -> str:
-        return "Dispositivo: " + str(self.id) + " - Tipo de Medição: " + self.tipo_medicao + \
-    " - Medição atual: " + str(self.medicao_atual) + " - Porta: " + str(self.porta)
+        return "Dispositivo: " + str(self.id) + " - Tipo de Medição: " + self.tipo_medicao + " - Porta: " + str(self.porta)
 

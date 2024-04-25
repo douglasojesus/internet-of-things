@@ -22,11 +22,11 @@ class MyAPIView(APIView):
         try:
             if dados.get('comando') == 'adicionar_dispositivo':
                 novo_dispositivo = recebe_porta_do_dispositivo()
-                print("DADOOOOOOOOOOOOOOOOOOOOOOOS: " + str(novo_dispositivo))
                 dispositivo = Dispositivo()
                 dispositivo.tipo_medicao = dados.get('tipo_medicao')
                 dispositivo.porta = novo_dispositivo[1]
                 dispositivo.nome = novo_dispositivo[0]
+                dispositivo.ip = novo_dispositivo[2]
                 dispositivo.save()
                 return Response({'value': 'dispositivo salvo'})
             else:
