@@ -8,7 +8,7 @@ import time
 
 HOST = '0.0.0.0'
 SERVER_IP = '127.0.0.1' # IP do servidor
-TCP_PORT = 12345  # Porta para comunicação TCP - porta do dispositivo
+TCP_PORT = 12343  # Porta para comunicação TCP - porta do dispositivo
 UDP_PORT = 54321  # Porta para comunicação UDP - porta do broker
 SENSOR_ID = 'sensor1'  # Identificador do sensor
 MEU_IP = '127.0.0.1'
@@ -31,7 +31,7 @@ def solicita_conexao(id_aplicacao, data, sock):
 def envia_porta_para_broker(server):
     while True:
         time.sleep(2)
-        data = f"('{SENSOR_ID}', {TCP_PORT}, {MEU_IP})"
+        data = f"('{SENSOR_ID}', {TCP_PORT}, '{MEU_IP}')"
         sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
         recebido = recebe_conexao(server)
         print("oi")
@@ -49,8 +49,9 @@ if __name__ == '__main__':
     server.bind((HOST, TCP_PORT))
     server.listen(1) #Só escuta de um broker
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    entrada = int(input("1 - se dispositivo já foi instalado no broker.\n2 - se dispositivo vai ser instalado agora\n"))
+    entrada = int(input("1 - se dispositivo já foi instalado no broker.\n2 - se dispositivo vai ser instalado agora\n>> "))
     if entrada == 2:
+        print("entrei")
         envia_porta_para_broker(server)
     while True:
         print("Dispositivo Startado")

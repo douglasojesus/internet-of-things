@@ -2,7 +2,6 @@ import socket
 import random
 import time
 import threading
-from broker.api.models import Dispositivo
 
 HOST = '0.0.0.0' 
 UDP_PORT = 54321  # Porta para comunicação UDP - porta do broker
@@ -17,12 +16,11 @@ def recebe_conexao(): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RECEBE C
     server_udp.close()
     return addr, data
 
-def solicita_conexao(dispositivo: Dispositivo, comando):
-    global DISPOSITIVO_IP, TCP_PORT
+def solicita_conexao(dispositivo, comando):
     try:
         data = f"{comando}"
         sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock_tcp.connect((dispositivo.ip, dispositivo.port))
+        sock_tcp.connect((dispositivo.ip, dispositivo.porta))
         sock_tcp.sendall(data.encode())
         print(f"Dados enviados via TCP: {data}")
         sock_tcp.close()
@@ -39,10 +37,10 @@ def recebe_porta_do_dispositivo():
     is_recebido = "recebido"
     data = eval(data)
     sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock_tcp.connect((DISPOSITIVO_IP, TCP_PORT))
+    sock_tcp.connect((data[2], data[1]))
     sock_tcp.sendall(is_recebido.encode())
     server_udp.close()
-    return data # formato: (id, porta)
+    return data # formato: (id, porta, IP)
 
 def main():
     threads = []

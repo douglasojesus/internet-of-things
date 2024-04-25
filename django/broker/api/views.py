@@ -22,6 +22,8 @@ class MyAPIView(APIView):
         try:
             if dados.get('comando') == 'adicionar_dispositivo':
                 novo_dispositivo = recebe_porta_do_dispositivo()
+                if Dispositivo.objects.filter(porta=novo_dispositivo[1]).first():
+                    return Response({'value': 'já existe um dispositivo salvo com essa porta. configure uma nova porta para o dispositivo.'})
                 dispositivo = Dispositivo()
                 dispositivo.tipo_medicao = dados.get('tipo_medicao')
                 dispositivo.porta = novo_dispositivo[1]
@@ -42,7 +44,7 @@ class MyAPIView(APIView):
                     return Response({'value': 'desligado'}, status=status.HTTP_201_CREATED)
                 elif dados.get('comando') == 'dados':
                     if dispositivo.esta_ativo:
-                        if solicita_conexao(id, dispositivo.tipo_medicao):
+                        if solicita_conexao(dispositivo, dispositivo.tipo_medicao):
                             addr, data = recebe_conexao()
                         print(data)
                         dispositivo.medicao_atual = data
