@@ -32,11 +32,8 @@ def envia_porta_para_broker(server, SERVER_IP, TCP_PORT):
         data = f"('{SENSOR_ID}', {TCP_PORT}, '{MEU_IP}')"
         sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
         recebido = recebe_conexao(server)
-        print("oi")
-        print(recebido)
         if recebido[1] == "recebido":
             break
-    print("tudo ok")
 
 
 def generate_temperature():
@@ -49,8 +46,8 @@ if __name__ == '__main__':
     server.bind((HOST, TCP_PORT))
     server.listen(1) #Só escuta de um broker
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    entrada = int(input("1 - se dispositivo já foi instalado no broker.\n2 - se dispositivo vai ser instalado agora\n>> "))
-    if entrada == 2:
+    entrada = input("Dispositivo já foi instalado no broker? (S/N)\n>> ")
+    if entrada.lower() == "n":
         envia_porta_para_broker(server, SERVER_IP, TCP_PORT)
     while True:
         print("Dispositivo Startado")

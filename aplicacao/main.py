@@ -15,11 +15,14 @@ def menu():
 >>> """)
 
 class Dispositivo():
-    def __init__(self, id, tipo_medicao, medicao_atual, esta_ativo):
+    def __init__(self, id, tipo_medicao, medicao_atual, esta_ativo, porta, ip, nome):
         self.id = id
         self.tipo_medicao = tipo_medicao
         self.medicao_atual = medicao_atual
         self.esta_ativo = esta_ativo
+        self.porta = porta
+        self.ip = ip
+        self.nome = nome
 
 def desserializacao(lista_json):
     dispositivos = []
@@ -28,7 +31,10 @@ def desserializacao(lista_json):
         tipo_medicao = objeto["fields"]["tipo_medicao"]
         medicao_atual = objeto["fields"]["medicao_atual"]
         esta_ativo = objeto["fields"]["esta_ativo"]
-        dispositivo = Dispositivo(id, tipo_medicao, medicao_atual, esta_ativo)
+        ip = objeto["fields"]["ip"]
+        porta = objeto["fields"]["porta"]
+        nome = objeto["fields"]["nome"]
+        dispositivo = Dispositivo(id, tipo_medicao, medicao_atual, esta_ativo, porta, ip, nome)
         dispositivos.append(dispositivo)
     return dispositivos
 
@@ -40,7 +46,7 @@ def ver_todos_dispositivos():
     print()
     for item in lista_dispositivos:
         esta_ativo = '\033[92m Está ligado. \033[0m' if item.esta_ativo else '\033[91m Está desligado. \033[0m'
-        print("ID: " + str(item.id) + " - Medição: " + item.tipo_medicao + " - " + esta_ativo) #colocar a porta e o ip
+        print("ID:", item.id, "- Medição:", item.tipo_medicao, "-", esta_ativo, "- IP:", item.ip, "- Porta:", item.porta)
 
 while True:
     opcao = menu()
