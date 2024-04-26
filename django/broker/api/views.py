@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .scripts.conection_sensor import solicita_conexao, recebe_conexao, recebe_porta_do_dispositivo
+from .scripts.conection_sensor import solicita_conexao, recebe_conexao, recebe_porta_do_dispositivo, ver_ip
 
 
 from rest_framework import status
@@ -31,6 +31,8 @@ class MyAPIView(APIView):
                 dispositivo.ip = novo_dispositivo[2]
                 dispositivo.save()
                 return Response({'value': 'dispositivo salvo'})
+            elif dados.get('comando') == 'ver_ip_server':
+                return Response({'value': ver_ip()})
             else:
                 dispositivo_id = dados.get('id')
                 dispositivo = Dispositivo.objects.get(pk=dispositivo_id)

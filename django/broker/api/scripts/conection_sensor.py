@@ -6,6 +6,9 @@ import threading
 HOST = '0.0.0.0' 
 UDP_PORT = 54321  # Porta para comunicação UDP - porta do broker
 
+def ver_ip():
+    return socket.gethostbyname(socket.gethostname())
+
 def recebe_conexao(): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RECEBE CONEXÃO ANTES DO DISPOSITIVO.
     global UDP_PORT
     server_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

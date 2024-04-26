@@ -12,6 +12,7 @@ def menu():
 (3) Desligar sensor;   
 (4) Solicitar medição atual do sensor;
 (5) Adicionar dispositivo;
+(6) Ver IP do servidor (broker);
 >>> """)
 
 class Dispositivo():
@@ -87,12 +88,11 @@ while True:
                 print("Dispositivo salvo no Broker.")
             else:
                 print("Dispositivo não foi salvo no Broker.")
+        elif opcao == "6":
+            response = requests.post(url, data={"comando": "ver_ip_server"})
+            response = eval(response.content)
+            print(f"\nIP do servidor: {response['value']}")
 
-
-
-
-
-        
         
         
     except requests.exceptions.ConnectionError:
