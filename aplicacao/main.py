@@ -40,7 +40,8 @@ def ver_todos_dispositivos():
     print()
     for item in lista_dispositivos:
         esta_ativo = '\033[92m Está ligado. \033[0m' if item.esta_ativo else '\033[91m Está desligado. \033[0m'
-        print("ID: " + str(item.id) + " - Tipo de Medição: " + item.tipo_medicao + " - " + esta_ativo)
+        print("ID: " + str(item.id) + " - Tipo de Medição: " + item.tipo_medicao + " - " + \
+              esta_ativo + " - IP: " + item.ip + " - Porta: " + item.porta)
 
 while True:
     opcao = menu()
@@ -74,7 +75,7 @@ while True:
         elif opcao == "5":
             tipo_medicao = input("Informe o tipo de medição que o dispositivo faz: ")
             response = requests.post(url, data={"tipo_medicao": tipo_medicao, "comando": "adicionar_dispositivo"})
-
+            response = eval(response.content)
             print("Conecte o novo dispositivo na tomada.")
             time.sleep(2)
 

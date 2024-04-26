@@ -47,6 +47,7 @@ class MyAPIView(APIView):
                 dispositivo.porta = novo_dispositivo[1]
                 dispositivo.nome = novo_dispositivo[0]
                 dispositivo.save()
+                return Response({'value': "dispositivo salvo", 'info': dispositivo.nome})
 
             else:
                 return Response({'error': 'Dispositivo so aceita os comandos: ligar, desligar, dados.', 'formato': '{"id": numero, "comando": "comando"}'})
