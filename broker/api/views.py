@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .scripts.conection_sensor import solicita_conexao, recebe_conexao, recebe_porta_do_dispositivo, ver_ip
+from .scripts.conection_sensor import solicita_conexao, recebe_conexao, ver_ip
 
 
 from rest_framework import status
@@ -10,7 +10,7 @@ from django.core.serializers import serialize
 
 class MyAPIView(APIView):
     def get(self, request):
-        with open('api/buffer/fool.txt', 'r+') as arquivo:
+        with open('api/buffer/cache.txt', 'r+') as arquivo:
             dados = arquivo.read()
             arquivo.seek(0) 
             arquivo.truncate(0)

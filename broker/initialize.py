@@ -21,7 +21,7 @@ def recebe_porta_do_dispositivo():
         sock_tcp.sendall(is_recebido.encode())
         server_udp.close()
 
-        with open('api/buffer/fool.txt', 'w') as arquivo:
+        with open('api/buffer/cache.txt', 'w') as arquivo:
             arquivo.write(f"('{data[0]}', '{data[1]}', {data[2]}, '{data[3]}')")
         
         time.sleep(2)  # Simulação de espera por conexões
