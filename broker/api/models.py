@@ -10,5 +10,5 @@ class Dispositivo(models.Model):
     ip = models.CharField(max_length=30)
 
     def __str__(self) -> str:
-        return "Dispositivo: " + str(self.id) + " - Tipo de Medição: " + self.tipo_medicao + " - Porta: " + str(self.porta)
+        return "Dispositivo: " + str(self.id) + " - Tipo de Medição: " + self.tipo_medicao + " - Porta: " + str(self.porta) + " - IP: " + self.ip
 

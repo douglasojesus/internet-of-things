@@ -26,10 +26,10 @@ def solicita_conexao(id_aplicacao, data, sock, SERVER_IP):
     sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
     print(f"Dados enviados: {data}")
 
-def envia_porta_para_broker(server, SERVER_IP, TCP_PORT):
+def envia_porta_para_broker(server, SERVER_IP, TCP_PORT, NOME, MEDICAO):
     while True:
         time.sleep(2)
-        data = f"('{SENSOR_ID}', {TCP_PORT}, '{MEU_IP}')"
+        data = f"('{NOME}', '{MEDICAO}', {TCP_PORT}, '{MEU_IP}')" # format: (nome, medicao, porta, ip)
         sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
         recebido = recebe_conexao(server)
         if recebido[1] == "recebido":
@@ -41,14 +41,18 @@ def generate_temperature():
 
 if __name__ == '__main__':
     SERVER_IP = input("Qual o IP do servidor? >> ")
-    TCP_PORT = int(input("Qual a porta desse dispositivo? >> "))
+    TCP_PORT = int(input("Qual a porta desse dispositivo (0-65535)? >> "))
+    while TCP_PORT < 0 or TCP_PORT > 65535:
+        TCP_PORT = int(input("A porta precisa estar entre 0 e 65535. >> "))
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, TCP_PORT))
     server.listen(1) #Só escuta de um broker
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     entrada = input("Dispositivo já foi instalado no broker? (S/N)\n>> ")
     if entrada.lower() == "n":
-        envia_porta_para_broker(server, SERVER_IP, TCP_PORT)
+        NOME = input("Qual o nome deste dispositivo? >> ")
+        MEDICAO = input("Que tipo de medição este dispositivo faz? >> ")
+        envia_porta_para_broker(server, SERVER_IP, TCP_PORT, NOME, MEDICAO)
     while True:
         print("Dispositivo Startado")
         broker_info = recebe_conexao(server)

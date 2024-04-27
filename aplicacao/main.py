@@ -11,8 +11,7 @@ def menu():
 (2) Ligar sensor;
 (3) Desligar sensor;   
 (4) Solicitar medição atual do sensor;
-(5) Adicionar dispositivo;
-(6) Ver IP do servidor (broker);
+(5) Ver IP do servidor (broker);
 >>> """)
 
 class Dispositivo():
@@ -79,16 +78,6 @@ while True:
             else:
                 print(response)
         elif opcao == "5":
-            tipo_medicao = input("Informe o tipo de medição que o dispositivo faz: ")
-            print("Conecte o novo dispositivo na tomada.")
-            response = requests.post(url, data={"tipo_medicao": tipo_medicao, "comando": "adicionar_dispositivo"})
-            response = eval(response.content)
-            print("RESPONSE: ", response)
-            if ('value' in response) and (response['value'] == 'dispositivo salvo'):
-                print("Dispositivo salvo no Broker.")
-            else:
-                print("Dispositivo não foi salvo no Broker.")
-        elif opcao == "6":
             response = requests.post(url, data={"comando": "ver_ip_server"})
             response = eval(response.content)
             print(f"\nIP do servidor: {response['value']}")

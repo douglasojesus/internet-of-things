@@ -6,10 +6,12 @@ import threading
 HOST = '0.0.0.0' 
 UDP_PORT = 54321  # Porta para comunicação UDP - porta do broker
 
+""" Função que retorna o IP do servidor. """
 def ver_ip():
     return socket.gethostbyname(socket.gethostname())
 
-def recebe_conexao(): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RECEBE CONEXÃO ANTES DO DISPOSITIVO.
+""" Função que retorna os dados obtidos do dispositivo via conexão UDP. """
+def recebe_conexao():
     global UDP_PORT
     server_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_udp.bind((HOST, UDP_PORT))
@@ -19,6 +21,7 @@ def recebe_conexao(): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RECEBE C
     server_udp.close()
     return addr, data
 
+""" Função que se comunica com o dispositivo via TCP. """
 def solicita_conexao(dispositivo, comando):
     try:
         data = f"{comando}"
@@ -33,6 +36,7 @@ def solicita_conexao(dispositivo, comando):
         time.sleep(2)
         return False
     
+""" Função que se conecta com o dispositivo adicionado e retorna as informações do dispositivo. """
 def recebe_porta_do_dispositivo():
     server_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_udp.bind((HOST, UDP_PORT))
@@ -45,6 +49,8 @@ def recebe_porta_do_dispositivo():
     server_udp.close()
     return data # formato: (id, porta, IP)
 
+
+
 def main():
     threads = []
     while True:
@@ -56,18 +62,7 @@ def main():
         if thread in threads:
             for thread in threads:
                 recebe_dados_udp.join()  # Aguarda a conclusão da thread
-                resultado = recebe_dados_udp.resultado
+                resultado = recebe_dados_udp
                 threads.remove(thread)
+                # Se o resultado tem a informação da aplicação que solicitou
                 # manipula resultado para retornar para aplicação correta
-
-# FLUXO:
-# ATIVA SERVIDOR UDP -> RECEBE REQUISIÇÃO -> SOLICITA CONEXÃO -> RECEBE CONEXÃO -> RESPONDE REQUISIÇÃO 
-
-if __name__ == '__main__':
-    while True:
-        print("Broker Startado")
-        input("Para enviar a solicitação, clique em enter.")
-        if solicita_conexao('Temperatura'):
-            sensor_infos = recebe_conexao()
-        time.sleep(2)
-        # daqui devolve como response da API

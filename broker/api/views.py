@@ -10,6 +10,20 @@ from django.core.serializers import serialize
 
 class MyAPIView(APIView):
     def get(self, request):
+        with open('api/buffer/fool.txt', 'r+') as arquivo:
+            dados = arquivo.read()
+            arquivo.seek(0) 
+            arquivo.truncate(0)
+        if len(dados) > 0:
+            dados = eval(dados) # format: (nome, medicao, porta, ip)
+            if Dispositivo.objects.filter(porta=dados[2]).first():
+                return Response({'value': 'já existe um dispositivo salvo com essa porta. configure uma nova porta para o dispositivo.'})
+            dispositivo = Dispositivo()
+            dispositivo.nome = dados[0]
+            dispositivo.tipo_medicao = dados[1] 
+            dispositivo.porta = dados[2]
+            dispositivo.ip = dados[3]
+            dispositivo.save()
         dispositivos = Dispositivo.objects.all()
         # Serializa os objetos Dispositivo em JSON
         dispositivos_json = serialize('json', dispositivos)
@@ -20,18 +34,7 @@ class MyAPIView(APIView):
         # Acessando os dados enviados pelo usuário no corpo da requisição
         dados = request.data 
         try:
-            if dados.get('comando') == 'adicionar_dispositivo':
-                novo_dispositivo = recebe_porta_do_dispositivo()
-                if Dispositivo.objects.filter(porta=novo_dispositivo[1]).first():
-                    return Response({'value': 'já existe um dispositivo salvo com essa porta. configure uma nova porta para o dispositivo.'})
-                dispositivo = Dispositivo()
-                dispositivo.tipo_medicao = dados.get('tipo_medicao')
-                dispositivo.porta = novo_dispositivo[1]
-                dispositivo.nome = novo_dispositivo[0]
-                dispositivo.ip = novo_dispositivo[2]
-                dispositivo.save()
-                return Response({'value': 'dispositivo salvo'})
-            elif dados.get('comando') == 'ver_ip_server':
+            if dados.get('comando') == 'ver_ip_server':
                 return Response({'value': ver_ip()})
             else:
                 dispositivo_id = dados.get('id')
