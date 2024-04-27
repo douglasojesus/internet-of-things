@@ -1,16 +1,24 @@
 # internet-of-things
 
-No ambiente virtual, instale as dependências: 
+Siga os seguintes passos no terminal para executar o broker: 
+- git clone https://github.com/douglasojesus/internet-of-things
+- cd internet-of-things/
+- python3 -m venv venv
+- source venv/bin/activate
 - pip install -r requirements.txt
+- cd broker/
+- python3 initialize.py
 
-Navegue para o dispositivo e o execute:
+Para exibir a aplicação, abra outro terminal e navegue no diretório clonado:
+- python3 internet-of-things/aplicacao/main.py
+
+Para emular o dispositivo, abra outro terminal e navegue no diretório clonado:
 - python3 internet-of-things/sensor/dispositivo.py
 
-Em outra aba do terminal, rode o servidor django:
-- python3 internet-of-things/django/broker/manage.py runserver
-
-Em outra aba do terminal, teste a API:
+Se quiser testar a API independente da aplicação, execute no terminal:
 - curl http://localhost:8000/api/
 - curl -X POST http://localhost:8000/api/ -H "Content-Type: application/json" -d '{"id": 1, "comando": "dados"}'
 
+Método GET retorna todos dispositivos cadastrados.
 Comandos disponíveis: ligar, desligar, dados.
+
