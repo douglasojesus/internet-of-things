@@ -3,9 +3,8 @@ import threading
 import time
 import socket
 
-
 HOST = '0.0.0.0' 
-UDP_PORT = 54321
+UDP_PORT = 54821
 
 # Função para simular recebimento contínuo de dispositivos
 def recebe_porta_do_dispositivo():
@@ -21,8 +20,8 @@ def recebe_porta_do_dispositivo():
         sock_tcp.sendall(is_recebido.encode())
         server_udp.close()
 
-        with open('api/buffer/cache.txt', 'w') as arquivo:
-            arquivo.write(f"('{data[0]}', '{data[1]}', {data[2]}, '{data[3]}')")
+        with open('api/buffer/cache.txt', 'a+') as arquivo:
+            arquivo.write(f"('{data[0]}', '{data[1]}', {data[2]}, '{data[3]}')\n")
         
         time.sleep(2)  # Simulação de espera por conexões
 

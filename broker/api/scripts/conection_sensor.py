@@ -1,10 +1,9 @@
 import socket
-import random
 import time
 import threading
 
 HOST = '0.0.0.0' 
-UDP_PORT = 54321  # Porta para comunicação UDP - porta do broker
+UDP_PORT = 54821  # Porta para comunicação UDP - porta do broker
 
 """ Função que retorna o IP do servidor. """
 def ver_ip():
@@ -48,8 +47,6 @@ def recebe_porta_do_dispositivo():
     sock_tcp.sendall(is_recebido.encode())
     server_udp.close()
     return data # formato: (id, porta, IP)
-
-
 
 def main():
     threads = []

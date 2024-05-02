@@ -7,7 +7,7 @@ import random
 import time
 
 HOST = '0.0.0.0'
-UDP_PORT = 54321  # Porta para comunicação UDP - porta do broker
+UDP_PORT = 54821  # Porta para comunicação UDP - porta do broker
 SENSOR_ID = 'sensor1'  # Identificador do sensor
 MEU_IP = socket.gethostbyname(socket.gethostname())
 

@@ -11,19 +11,22 @@ from django.core.serializers import serialize
 class MyAPIView(APIView):
     def get(self, request):
         with open('api/buffer/cache.txt', 'r+') as arquivo:
-            dados = arquivo.read()
+            lista = []
+            for linha in arquivo:
+                lista.append(linha)
             arquivo.seek(0) 
             arquivo.truncate(0)
-        if len(dados) > 0:
-            dados = eval(dados) # format: (nome, medicao, porta, ip)
-            if Dispositivo.objects.filter(porta=dados[2]).first():
-                return Response({'value': 'já existe um dispositivo salvo com essa porta. configure uma nova porta para o dispositivo.'})
-            dispositivo = Dispositivo()
-            dispositivo.nome = dados[0]
-            dispositivo.tipo_medicao = dados[1] 
-            dispositivo.porta = dados[2]
-            dispositivo.ip = dados[3]
-            dispositivo.save()
+        if len(lista) > 0:
+            for dados in lista:
+                dados = eval(dados) # format: (nome, medicao, porta, ip)
+                if Dispositivo.objects.filter(porta=dados[2]).first():
+                    return Response({'value': 'já existe um dispositivo salvo com essa porta. configure uma nova porta para o dispositivo.'})
+                dispositivo = Dispositivo()
+                dispositivo.nome = dados[0]
+                dispositivo.tipo_medicao = dados[1] 
+                dispositivo.porta = dados[2]
+                dispositivo.ip = dados[3]
+                dispositivo.save()
         dispositivos = Dispositivo.objects.all()
         # Serializa os objetos Dispositivo em JSON
         dispositivos_json = serialize('json', dispositivos)
