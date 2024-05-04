@@ -26,7 +26,9 @@ def recebe_porta_do_dispositivo():
         time.sleep(2)  # Simulação de espera por conexões
 
 def iniciar_servidor_django():
-    os.system("python3 manage.py runserver")
+	os.system("python3 manage.py makemigrations")
+	os.system("python3 manage.py migrate")
+	os.system("python3 manage.py runserver 0.0.0.0:8000")
 
 def main():
     # Inicia o servidor Django em uma thread separada
