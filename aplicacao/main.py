@@ -3,7 +3,7 @@ import json
 import time
 
 # URL da API onde os dados serão enviados
-url = 'http://localhost:8000/api/'
+url = 'http://localhost:1026/api/'
 
 def menu():
     return input("""

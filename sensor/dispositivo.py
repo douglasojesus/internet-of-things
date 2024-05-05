@@ -7,7 +7,7 @@ import random
 import time
 
 HOST = '0.0.0.0'
-UDP_PORT = 44444  # Porta para comunicação UDP - porta do broker
+UDP_PORT = 1025  # Porta para comunicação UDP - porta do broker
 SENSOR_ID = 'sensor1'  # Identificador do sensor
 MEU_IP = socket.gethostbyname(socket.gethostname())
 
@@ -21,7 +21,7 @@ def recebe_conexao(server): # ELE TEM QUE SEMPRE RECEBER -> PRECISA INICIAR O RE
 
     return client_addr, data
 
-def solicita_conexao(id_aplicacao, data, sock, SERVER_IP):
+def solicita_conexao(data, sock, SERVER_IP):
     data = f"{data}"
     sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
     print(f"Dados enviados: {data}")
@@ -32,14 +32,14 @@ def envia_porta_para_broker(server, SERVER_IP, TCP_PORT, NOME, MEDICAO):
     sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
     print(SERVER_IP, UDP_PORT, "enviado para broker")
 
-def generate_temperature():
+def generate_number():
     return round(random.uniform(20, 30), 2)  # Simula temperatura entre 20°C e 30°C
 
 if __name__ == '__main__':
     SERVER_IP = input("Qual o IP do servidor? >> ")
-    TCP_PORT = int(input("Qual a porta desse dispositivo (01024-65535)? >> "))
-    while TCP_PORT < 1024 or TCP_PORT > 65535:
-        TCP_PORT = int(input("A porta precisa estar entre 0 e 65535. >> "))
+    TCP_PORT = int(input("Qual a porta desse dispositivo (01028-65535)? >> "))
+    while TCP_PORT < 1028 or TCP_PORT > 65535 or TCP_PORT == 8000:
+        TCP_PORT = int(input("A porta precisa estar entre 01028 e 65535. >> "))
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, TCP_PORT))
     server.listen(1) #Só escuta de um broker
@@ -53,9 +53,9 @@ if __name__ == '__main__':
         print("Dispositivo Startado")
         broker_info = recebe_conexao(server)
         print(broker_info)
-        temp = generate_temperature()
-        solicita_conexao('teste', temp, sock, SERVER_IP)
-        time.sleep(2)
+        value = generate_number()
+        solicita_conexao(value, sock, SERVER_IP)
+        time.sleep(1)
     conexao.close()
     server.close()
     sock.close()

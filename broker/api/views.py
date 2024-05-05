@@ -54,7 +54,7 @@ class MyAPIView(APIView):
                     if dispositivo.esta_ativo:
                         if solicita_conexao(dispositivo, dispositivo.tipo_medicao):
                             addr, data = recebe_conexao()
-                        print(data)
+                        print("INSIDE THE VIEW", data)
                         dispositivo.medicao_atual = data
                         dispositivo.save()
                         return Response({'value': dispositivo.medicao_atual}, status=status.HTTP_201_CREATED)

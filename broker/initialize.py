@@ -4,7 +4,7 @@ import time
 import socket
 
 HOST = '0.0.0.0' 
-UDP_PORT = 44444
+UDP_PORT = 1025
 
 # Função para simular recebimento contínuo de dispositivos
 def recebe_porta_do_dispositivo():
@@ -29,7 +29,7 @@ def recebe_porta_do_dispositivo():
 def iniciar_servidor_django():
 	os.system("python3 manage.py makemigrations")
 	os.system("python3 manage.py migrate")
-	os.system("python3 manage.py runserver 0.0.0.0:8000")
+	os.system("python3 manage.py runserver 0.0.0.0:1026")
 
 def main():
     # Inicia uma thread para receber informações do dispositivo

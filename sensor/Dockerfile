@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-EXPOSE 11111
+EXPOSE 44444
 
 CMD ["python3", "dispositivo.py"]

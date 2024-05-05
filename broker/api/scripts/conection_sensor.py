@@ -3,7 +3,7 @@ import time
 import threading
 
 HOST = '0.0.0.0' 
-UDP_PORT = 54821  # Porta para comunicação UDP - porta do broker
+UDP_PORT = 1025  # Porta para comunicação UDP - porta do broker
 
 """ Função que retorna o IP do servidor. """
 def ver_ip():

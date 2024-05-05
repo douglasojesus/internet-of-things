@@ -10,7 +10,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
-EXPOSE 44444
-
 CMD ["python3", "-u", "initialize.py"]
