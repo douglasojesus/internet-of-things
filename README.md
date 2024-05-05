@@ -1,5 +1,3 @@
-# internet-of-things
-
 <div align="center">
 
 # Internet of things (IOT)
