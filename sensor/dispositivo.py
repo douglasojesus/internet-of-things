@@ -7,7 +7,7 @@ import random
 import time
 
 HOST = '0.0.0.0'
-UDP_PORT = 54821  # Porta para comunicação UDP - porta do broker
+UDP_PORT = 44444  # Porta para comunicação UDP - porta do broker
 SENSOR_ID = 'sensor1'  # Identificador do sensor
 MEU_IP = socket.gethostbyname(socket.gethostname())
 
@@ -27,25 +27,18 @@ def solicita_conexao(id_aplicacao, data, sock, SERVER_IP):
     print(f"Dados enviados: {data}")
 
 def envia_porta_para_broker(server, SERVER_IP, TCP_PORT, NOME, MEDICAO):
-    while True:
-        time.sleep(2)
-
-        data = f"('{NOME}', '{MEDICAO}', {TCP_PORT}, '{MEU_IP}')" # format: (nome, medicao, porta, ip)  
-        print("mandando porta para broker")
-        sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
-        print("broker recebeu")
-        recebido = recebe_conexao(server)
-        if recebido[1] == "recebido":
-            break
-
+    time.sleep(1)
+    data = f"('{NOME}', '{MEDICAO}', {TCP_PORT}, '{MEU_IP}')" # format: (nome, medicao, porta, ip)  
+    sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
+    print(SERVER_IP, UDP_PORT, "enviado para broker")
 
 def generate_temperature():
     return round(random.uniform(20, 30), 2)  # Simula temperatura entre 20°C e 30°C
 
 if __name__ == '__main__':
     SERVER_IP = input("Qual o IP do servidor? >> ")
-    TCP_PORT = int(input("Qual a porta desse dispositivo (0-65535)? >> "))
-    while TCP_PORT < 0 or TCP_PORT > 65535:
+    TCP_PORT = int(input("Qual a porta desse dispositivo (01024-65535)? >> "))
+    while TCP_PORT < 1024 or TCP_PORT > 65535:
         TCP_PORT = int(input("A porta precisa estar entre 0 e 65535. >> "))
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, TCP_PORT))
