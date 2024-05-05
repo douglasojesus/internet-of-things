@@ -3,11 +3,8 @@
 Siga os seguintes passos no terminal para executar o broker: 
 - git clone https://github.com/douglasojesus/internet-of-things
 - cd internet-of-things/
-- python3 -m venv venv
-- source venv/bin/activate
-- pip install -r requirements.txt
-- cd broker/
-- python3 initialize.py
+- sudo docker build -t broker .
+- sudo docker run -p 44444:44444/udp -p 8000:8000 --name nome_do_container broker
 
 Para exibir a aplicação, abra outro terminal e navegue no diretório clonado:
 - python3 internet-of-things/aplicacao/main.py
