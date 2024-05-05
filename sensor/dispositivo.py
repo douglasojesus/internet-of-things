@@ -29,8 +29,11 @@ def solicita_conexao(id_aplicacao, data, sock, SERVER_IP):
 def envia_porta_para_broker(server, SERVER_IP, TCP_PORT, NOME, MEDICAO):
     while True:
         time.sleep(2)
-        data = f"('{NOME}', '{MEDICAO}', {TCP_PORT}, '{MEU_IP}')" # format: (nome, medicao, porta, ip)
+
+        data = f"('{NOME}', '{MEDICAO}', {TCP_PORT}, '{MEU_IP}')" # format: (nome, medicao, porta, ip)  
+        print("mandando porta para broker")
         sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
+        print("broker recebeu")
         recebido = recebe_conexao(server)
         if recebido[1] == "recebido":
             break

@@ -15,15 +15,16 @@ def recebe_porta_do_dispositivo():
         data, addr = server_udp.recvfrom(1024)
         is_recebido = "recebido"
         data = eval(data) # format: (nome, medicao, porta, ip)
+        print(data)
         sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock_tcp.connect((data[3], data[2]))
+        sock_tcp.connect((data[3], data[2])) # ip e porta
         sock_tcp.sendall(is_recebido.encode())
         server_udp.close()
 
         with open('api/buffer/cache.txt', 'a+') as arquivo:
             arquivo.write(f"('{data[0]}', '{data[1]}', {data[2]}, '{data[3]}')\n")
-        
-        time.sleep(2)  # Simulação de espera por conexões
+
+        time.sleep(1)  # Simulação de espera por conexões
 
 def iniciar_servidor_django():
 	os.system("python3 manage.py makemigrations")
@@ -31,13 +32,13 @@ def iniciar_servidor_django():
 	os.system("python3 manage.py runserver 0.0.0.0:8000")
 
 def main():
-    # Inicia o servidor Django em uma thread separada
-    django_thread = threading.Thread(target=iniciar_servidor_django)
-    django_thread.start()
-
     # Inicia uma thread para receber informações do dispositivo
     dispositivo_thread = threading.Thread(target=recebe_porta_do_dispositivo)
     dispositivo_thread.start()
+
+    # Inicia o servidor Django em uma thread separada
+    django_thread = threading.Thread(target=iniciar_servidor_django)
+    django_thread.start()
 
     # Aguarda as threads terminarem (isso mantém o programa principal rodando)
     dispositivo_thread.join()
