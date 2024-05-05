@@ -2,15 +2,17 @@
 
 Siga os seguintes passos no terminal para executar o broker: 
 - git clone https://github.com/douglasojesus/internet-of-things
-- cd internet-of-things/
+- cd internet-of-things/broker/
 - sudo docker build -t broker .
-- sudo docker run -p 44444:44444/udp -p 8000:8000 --name nome_do_container broker
+- sudo docker run --network='host' -it --name container server
 
-Para exibir a aplicação, abra outro terminal e navegue no diretório clonado:
-- python3 internet-of-things/aplicacao/main.py
+Com isso, o servidor Broker já está rodando na porta 1026.
 
 Para emular o dispositivo, abra outro terminal e navegue no diretório clonado:
 - python3 internet-of-things/sensor/dispositivo.py
+
+Para exibir a aplicação, abra outro terminal e navegue no diretório clonado:
+- python3 internet-of-things/aplicacao/main.py
 
 Se quiser testar a API independente da aplicação, execute no terminal:
 - curl http://localhost:8000/api/
