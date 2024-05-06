@@ -133,6 +133,41 @@ Quando uma solicitação POST é feita na mesma rota:
 
 # Tratamento de conexões simultâneas (threads)
 
+<p align="justify">O código em initialize.py demonstra o tratamento de conexões simultâneas utilizando threads em Python. Aqui está como funciona:</p>
+
+1. Inicialização das Threads:
+    - O programa principal (main) inicia duas threads separadas.
+    - A primeira thread é responsável por receber informações do dispositivo, simulando um recebimento contínuo de dados via UDP para conexão inicial.
+    - A segunda thread é responsável por iniciar o servidor Django, que será executado em paralelo com a thread de recebimento de dados.
+
+2. Recebimento Contínuo de Dispositivos:
+    - A função recebe_porta_do_dispositivo é executada em uma thread separada.
+    - Dentro dessa função, um socket UDP é criado para aguardar a conexão do dispositivo na porta especificada (UDP_PORT_FIRST_CONNECTION).
+    - Quando uma conexão é estabelecida, os dados são recebidos e processados. Em seguida, é criado um socket TCP para enviar uma confirmação de recebimento ao dispositivo.
+    - Os dados recebidos são então armazenados em um arquivo cache.txt para posterior processamento pelo Broker.
+
+3. Inicialização do Servidor Django:
+    - A função iniciar_servidor_django é responsável por iniciar o servidor Django.
+    - Ela executa comandos para fazer as migrações necessárias e iniciar o servidor Django na porta especificada (1026).
+    
+4. Execução Paralela e Aguardo das Threads:
+    - As duas threads (dispositivo_thread e django_thread) são iniciadas em paralelo.
+    - O programa principal aguarda o término das threads utilizando o método join(), garantindo que o programa continue em execução até que todas as threads tenham finalizado.
+    - Esse modelo de utilização de threads permite que o programa gerencie múltiplas tarefas simultaneamente, como receber dados do dispositivo e atender solicitações da aplicação web, sem bloquear a execução do programa principal. Isso é especialmente útil em situações onde é necessário lidar com operações de entrada e saída (I/O) de forma assíncrona e eficiente.
+
+<p align="justify">As threads foram utilizadas no sistema para torná-lo mais eficiente ao lidar com tarefas simultâneas de forma concorrente. Isso permite que o sistema execute múltiplas operações ao mesmo tempo, como receber dados do dispositivo e atender solicitações da aplicação web, sem a necessidade de esperar uma operação ser concluída para iniciar outra. Isso resulta em uma melhor utilização dos recursos do sistema e melhora a capacidade de resposta em cenários onde múltiplas operações precisam ser realizadas simultaneamente.</p>
+
+<p align="justify">No entanto, o uso de threads pode trazer problemas de concorrência, como condições de corrida e acesso concorrente a recursos compartilhados. No código do uso da thread, é possível identificar uma situação em que esses problemas podem surgir:</p>
+
+1. Acesso ao arquivo cache.txt: A função recebe_porta_do_dispositivo escreve dados no arquivo cache.txt enquanto outras threads podem estar acessando ou modificando esse mesmo arquivo. Isso pode levar a condições de corrida e resultados inesperados no conteúdo do arquivo.
+
+<p align="justify">Para lidar com esses problemas de concorrência, a prática do uso de filas e buffers foram aplicadas, já que, ao lidar com múltiplas threads que acessam recursos compartilhados, o uso dessas estratégias podem ajudar a coordenar o acesso aos dados de forma segura e ordenada, evitando problemas de concorrência.</p>
+
+<p align="justify">A estratégia utilizada foi:</p>
+
+- Fila para escrita no arquivo cache.txt: Em vez de escrever diretamente no arquivo cache.txt a partir de várias threads simultaneamente, foi usado uma fila para adicionar os dados a serem escritos. Uma thread dedicada pode então consumir essa fila de forma sequencial, escrevendo os dados no arquivo um após o outro. Isso evita condições de corrida e garante a ordem de escrita.
+
+
 # Gerenciamento do dispositivo
 
 # Desempenho (uso de cache no Broker, filas, threads, etc.)
