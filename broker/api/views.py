@@ -73,7 +73,7 @@ class MyAPIView(APIView):
                         dispositivo.save()
                         return Response({'value': valor}, status=status.HTTP_201_CREATED)     
                     else:
-                        return Response()      
+                        return Response({'error': 'Dispositivo esta desligado.'})      
                 else:
                     return Response({'error': 'Dispositivo so aceita os comandos: ligar, desligar, dados.', 'formato': '{"id": numero, "comando": "comando"}'})
         except Dispositivo.DoesNotExist:
