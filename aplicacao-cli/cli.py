@@ -2,9 +2,6 @@ import requests
 import json
 import time
 
-# URL da API onde os dados serão enviados
-url = 'http://localhost:1026/api/'
-
 def menu():
     return input("""
 (1) Ver dispositivos disponíveis;
@@ -39,7 +36,7 @@ def desserializacao(lista_json):
     return dispositivos
 
 
-def ver_todos_dispositivos():
+def ver_todos_dispositivos(url):
     response = requests.get(url)
     response = eval(json.loads(response.text).replace("true", "True").replace("null", "None").replace("false", "False"))
     lista_dispositivos = desserializacao((response))
@@ -49,10 +46,14 @@ def ver_todos_dispositivos():
         print("ID:", item.id, "- Medição:", item.tipo_medicao, "-", esta_ativo, "- IP:", item.ip, "- Porta:", item.porta)
 
 while True:
+    ip = input("Informe o endereço (IP) do servidor: ")
+    # URL da API onde os dados serão enviados
+    url = f'http://{ip}:1026/api/'
+
     opcao = menu()
     try:
         if opcao == "1":
-            ver_todos_dispositivos()
+            ver_todos_dispositivos(url)
         elif opcao == "2":
             id = input("Informe qual o ID do dispositivo desejado: ")
             response = requests.post(url, data={"id": id, "comando": "ligar"})
