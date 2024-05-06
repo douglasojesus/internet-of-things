@@ -8,6 +8,20 @@
 
 <p align="justify">Este relatório aborda a implementação de um Broker utilizando o framework Django, um emulador de dispositivo e uma aplicação, com foco na interconexão desses elementos. O Broker recebe solicitações da aplicação (cliente) por meio de uma API REST e se comunica com os dispositivos através de uma conexão socket TCP. Os dados dos dispositivos são recebidos pelo Broker por meio de uma porta UDP e, em resposta às requisições do cliente, o Broker fornece uma resposta baseada nos dados adquiridos dos dispositivos. Este projeto foi desenvolvido como parte dos estudos da disciplina de Concorrência e Conectividade na Universidade Estadual de Feira de Santana (UEFS).</p>
 
+# Sumário
+
+<ul>
+  <li><a href="#Ferramentas utilizadas"><b>Ferramentas utilizadas</b></li>
+  <li><a href="#introducao"> <b>Introdução</b></li>
+  <li><a href="#requisitos"> <b>Objetivos e Requisitos do problema</b> </a></li>
+  <li><a href="#recursos"> <b>Recursos Utilizados</b></li>
+  <li><a href="#desenvolvimento"> <b>Desenvolvimento e Descrição em Alto Nível</b> </a> </li>
+  <li><a href="#descricao-e-analise-dos-testes"> <b>Descrição e Análise dos Testes e Simulações, Resultados e Discussões</b> </a></li>
+  <li><a href="#conclusao"> <b>Conclusão</b> </a></li>
+  <li><a href="#bibliografia"> <b>Bibliografia</b> </a></li>
+  <li><a href="#script-de-compilacao"> <b>Uso do projeto</b> </a></li>
+</ul>
+
 # Ferramentas utilizadas
 
 - 🔨 Linguagem de Programação Python.
@@ -222,7 +236,11 @@ Supondo a possibilidade de que os 3 nós estão conectados (Broker, dispositivo 
 3. Se a aplicação for desconectada:
     - Nesse caso, nem o Broker e nem o dispositivo serão afetados. Ao conectar novamente, o usuário ainda poderá fazer as requisições sem problemas para o Broker.
 
-# Documentação do código
+# Conclusão
+
+O sistema atende aos requisitos estabelecidos ao empregar protocolos de comunicação específicos para cada contexto. Utilizando uma API REST com o protocolo HTTP, os clientes podem se comunicar eficientemente com o Broker. Além disso, a aplicação faz uso dos protocolos UDP e TCP/IP para garantir a comunicação confiável entre o broker e os dispositivos.
+
+Em relação a possíveis falhas de rede que possam afetar a comunicação, o sistema é capaz de lidar com essas situações. Por exemplo, se houver uma desconexão do cabo de rede, o sistema permanece em espera até que a conexão seja restabelecida, assegurando a continuidade das comunicações sem interrupções.
 
 # Emprego do Docker
 
