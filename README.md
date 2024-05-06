@@ -300,5 +300,5 @@ Se quiser testar a API independente da aplicação, execute no terminal:
 - ```curl -X POST http://localhost:1026/api/ -H "Content-Type: application/json" -d '{"id": 1, "comando": "dados"}'```
 
 Método GET retorna todos dispositivos cadastrados.
-Comandos disponíveis: ligar, desligar, dados.
+Comandos disponíveis para método POST: ligar, desligar, dados.
 
