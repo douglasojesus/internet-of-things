@@ -62,29 +62,34 @@
 
 ### 1. Ver dispositivos disponíveis
 <p align="justify">Ao selecionar esta opção, a aplicação faz uma requisição GET para a API do broker, obtendo uma lista de dispositivos disponíveis. Essa lista é exibida na interface gráfica para o usuário. Quando essa requisição é feita, os dispositivos salvos em cache são adicionados no Banco de Dados.</p>
+
 - **Verbo**: GET
 - **Rota**: `http://localhost:1026/api/`
 
 ### 2. Ligar sensor
 <p align="justify">Permite ao usuário enviar um comando para ligar um sensor específico. A aplicação envia uma requisição POST para a API do broker com o ID do dispositivo e o comando "ligar".</p>
+
 - **Verbo**: POST
 - **Rota**: `http://localhost:1026/api/`
 - **Parâmetros**: `{"id": device_id, "comando": "ligar"}`
 
 ### 3. Desligar sensor
 <p align="justify">Similar ao item anterior, porém envia o comando "desligar".</p>
+
 - **Verbo**: POST
 - **Rota**: `http://localhost:1026/api/`
 - **Parâmetros**: `{"id": device_id, "comando": "desligar"}`
 
 ### 4. Solicitar medição atual do sensor
 <p align="justify">Esta opção permite ao usuário solicitar a medição atual de um sensor específico. A aplicação envia uma requisição POST para a API do broker com o ID do dispositivo e o comando "dados". </p>
+
 - **Verbo**: POST
 - **Rota**: `http://localhost:1026/api/`
 - **Parâmetros**: `{"id": device_id, "comando": "dados"}`
 
 ### 5. Ver IP do servidor (broker)
 <p align="justify">Ao selecionar esta opção, a aplicação envia uma requisição POST para a API do broker com o comando "ver_ip_server", obtendo assim o IP do servidor. </p>
+
 - **Verbo**: POST
 - **Rota**: `http://localhost:1026/api/`
 - **Parâmetros**: `{"comando": "ver_ip_server"}`
