@@ -275,20 +275,25 @@ Em relação a possíveis falhas de rede que possam afetar a comunicação, o si
 Siga os seguintes passos no terminal para executar o broker: 
 - ```git clone https://github.com/douglasojesus/internet-of-things```
 - ```cd internet-of-things/broker/```
-- ```sudo docker build -t broker .```
-- ```sudo docker run --network='host' -it --name container_broker broker```
+- ```docker build -t broker .```
+- ```docker run --network='host' -it --name container_broker broker```
 
 Com isso, o servidor Broker já está rodando na porta 1026.
 
 Para emular o dispositivo, abra outro terminal e navegue no diretório clonado:
 - ```cd internet-of-things/sensor/```
-- ```sudo docker build -t sensor .```
-- ```sudo docker run --network='host' -it --name container_sensor sensor```
+- ```docker build -t sensor .```
+- ```docker run --network='host' -it --name container_sensor sensor```
 
 Para exibir a aplicação, abra outro terminal e navegue no diretório clonado:
 - ```cd internet-of-things/aplicacao/```
-- ```sudo docker build -t aplicacao .```
-- ```sudo docker run --network='host' -it -u=$(id -u $USER):$(id -g $USER) -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v --rm aplicacao```
+- ```docker build -t aplicacao .```
+- ```docker run --network='host' -it -u=$(id -u $USER):$(id -g $USER) -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v --rm aplicacao```
+
+Se você não conseguir se conectar com o Display, pode usar a aplicação CLI:
+- ```cd internet-of-things/aplicacao-cli/```
+- ```docker build -t aplicacaocli .```
+- ```docker run --network='host' -it --name container_aplicacaocli aplicacaocli```
 
 Se quiser testar a API independente da aplicação, execute no terminal:
 - ```curl http://localhost:1026/api/```
