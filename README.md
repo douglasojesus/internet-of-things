@@ -94,12 +94,20 @@ Sensor: dispositivo.py.
 - **Verbo**: GET
 - **Rota**: `http://localhost:1026/api/`
 
+<p align="center">
+  <img src="docs/imgs/GETAPITeste.png" alt="Figura 2.">
+</p>
+
 ### 2. Ligar sensor
 <p align="justify">Permite ao usuário enviar um comando para ligar um sensor específico. A aplicação envia uma requisição POST para a API do broker com o ID do dispositivo e o comando "ligar".</p>
 
 - **Verbo**: POST
 - **Rota**: `http://localhost:1026/api/`
 - **Parâmetros**: `{"id": device_id, "comando": "ligar"}`
+
+<p align="center">
+  <img src="docs/imgs/LigarDispositivo.png" alt="Figura 3.">
+</p>
 
 ### 3. Desligar sensor
 <p align="justify">Similar ao item anterior, porém envia o comando "desligar".</p>
@@ -108,6 +116,10 @@ Sensor: dispositivo.py.
 - **Rota**: `http://localhost:1026/api/`
 - **Parâmetros**: `{"id": device_id, "comando": "desligar"}`
 
+<p align="center">
+  <img src="docs/imgs/DesligarDispositivo.png" alt="Figura 4.">
+</p>
+
 ### 4. Solicitar medição atual do sensor
 <p align="justify">Esta opção permite ao usuário solicitar a medição atual de um sensor específico. A aplicação envia uma requisição POST para a API do broker com o ID do dispositivo e o comando "dados". </p>
 
@@ -115,12 +127,20 @@ Sensor: dispositivo.py.
 - **Rota**: `http://localhost:1026/api/`
 - **Parâmetros**: `{"id": device_id, "comando": "dados"}`
 
+<p align="center">
+  <img src="docs/imgs/POSTAPITest.png" alt="Figura 5.">
+</p>
+
 ### 5. Ver IP do servidor (broker)
 <p align="justify">Ao selecionar esta opção, a aplicação envia uma requisição POST para a API do broker com o comando "ver_ip_server", obtendo assim o IP do servidor. </p>
 
 - **Verbo**: POST
 - **Rota**: `http://localhost:1026/api/`
 - **Parâmetros**: `{"comando": "ver_ip_server"}`
+
+<p align="center">
+  <img src="docs/imgs/VerIpServer.png" alt="Figura 6.">
+</p>
 
 ## Interface da Aplicação (REST) do lado do Servidor
 
@@ -263,8 +283,8 @@ Para exibir a aplicação, abra outro terminal e navegue no diretório clonado:
 - ```sudo docker run --network='host' -it -u=$(id -u $USER):$(id -g $USER) -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v --rm aplicacao```
 
 Se quiser testar a API independente da aplicação, execute no terminal:
-- ```curl http://localhost:8000/api/```
-- ```curl -X POST http://localhost:8000/api/ -H "Content-Type: application/json" -d '{"id": 1, "comando": "dados"}'```
+- ```curl http://localhost:1026/api/```
+- ```curl -X POST http://localhost:1026/api/ -H "Content-Type: application/json" -d '{"id": 1, "comando": "dados"}'```
 
 Método GET retorna todos dispositivos cadastrados.
 Comandos disponíveis: ligar, desligar, dados.
