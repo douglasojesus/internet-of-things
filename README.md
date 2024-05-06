@@ -54,7 +54,7 @@
 
 # Interface da Aplicação (REST)
 
-<p align="justify">A interface da aplicação baseada em REST é implementada por meio de um código que utiliza a biblioteca tkinter para a criação de uma interface gráfica de usuário (GUI). Esta GUI permite interações com os serviços de rede do sistema, facilitando a comunicação entre o usuário e os dispositivos controlados pelo broker. Quanto às requisições, a interface usa a biblioteca requests para efetuar requisições para a API.</p>
+<p align="justify">Do lado do cliente, a interface da aplicação baseada em REST é implementada por meio de um código que utiliza a biblioteca tkinter para a criação de uma interface gráfica de usuário (GUI). Esta GUI permite interações com os serviços de rede do sistema, facilitando a comunicação entre o usuário e os dispositivos controlados pelo broker. Quanto às requisições, a interface usa a biblioteca requests para efetuar requisições para a API.</p>
 
 <p align="justify">O código da aplicação define uma classe Application, que herda as funcionalidades da classe tk.Tk do tkinter. Nesta classe, são criados elementos visuais como rótulos, menus, campos de entrada e botões para interação do usuário. Através desses elementos, o usuário pode realizar diversas operações relacionadas aos dispositivos controlados pelo broker.</p>
 
@@ -93,6 +93,27 @@
 - **Verbo**: POST
 - **Rota**: `http://localhost:1026/api/`
 - **Parâmetros**: `{"comando": "ver_ip_server"}`
+
+## Interface da Aplicação (REST) do lado do Servidor
+
+### Verbo GET:
+
+Ao receber uma solicitação GET na rota correspondente:
+1. O servidor abre e lê um arquivo de cache (`cache.txt`) que contém informações sobre dispositivos.
+2. Verifica se há dados no arquivo e, se sim, processa esses dados para criar objetos Dispositivo no banco de dados, evitando duplicação de dispositivos com a mesma porta.
+3. Busca todos os dispositivos no banco de dados, serializa-os em formato JSON e retorna essa lista como resposta.
+
+### Verbo POST:
+
+Quando uma solicitação POST é feita na mesma rota:
+- Verifica o tipo de comando enviado no corpo da requisição.
+- Se o comando for "ver_ip_server", retorna o IP do servidor (broker).
+- Caso contrário, acessa os dados enviados para determinar o dispositivo e o comando a ser executado.
+- Executa as ações correspondentes no dispositivo com base no comando recebido ("ligar", "desligar", "dados"):
+  - Atualiza o status do dispositivo no banco de dados e retorna uma mensagem de confirmação para "ligar" ou "desligar".
+  - Obtém a medição atual do dispositivo se o comando for "dados" e o dispositivo estiver ligado. Atualiza o banco de dados com essa medição e a retorna como resposta.
+
+<p align="justify">Essa interface REST fornece endpoints para interagir com os dispositivos, permitindo o controle e a obtenção de informações de forma eficiente e organizada.</p>
 
 <p align="justify">Estas são as operações que a camada de aplicação executa na interação com a API do broker, utilizando os verbos HTTP e as rotas correspondentes para realizar as ações desejadas, como consultar dispositivos disponíveis, controlar sensores e obter informações do servidor (broker).</p>
 
