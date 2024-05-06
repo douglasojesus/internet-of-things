@@ -8,6 +8,19 @@
 
 <p align="justify">Este relatório aborda a implementação de um Broker utilizando o framework Django, um emulador de dispositivo e uma aplicação, com foco na interconexão desses elementos. O Broker recebe solicitações da aplicação (cliente) por meio de uma API REST e se comunica com os dispositivos através de uma conexão socket TCP. Os dados dos dispositivos são recebidos pelo Broker por meio de uma porta UDP e, em resposta às requisições do cliente, o Broker fornece uma resposta baseada nos dados adquiridos dos dispositivos. Este projeto foi desenvolvido como parte dos estudos da disciplina de Concorrência e Conectividade na Universidade Estadual de Feira de Santana (UEFS).</p>
 
+# Ferramentas utilizadas
+
+- 🔨 Linguagem de Programação Python.
+- 🔨 Framework Web Django.
+- 🔨 Bibliotecas tkinter, requests, socket, os, queue, threading, time.
+- 🔨 Docker
+
+# Arquivos principais
+
+Broker: initialize.py, api/views.py, api/scripts/connection_sensor.py, api/buffer/cache.txt, api/models.py, api/urls.py.
+Aplicação: interface.py.
+Sensor: dispositivo.py.
+
 # Arquitetura da solução (componentes e mensagens)
 
 <p align="justify">A arquitetura da solução é composta por três principais componentes: o Broker, o emulador de dispositivo e a aplicação cliente.</p>

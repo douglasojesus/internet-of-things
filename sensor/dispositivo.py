@@ -7,7 +7,6 @@ HOST = '0.0.0.0'
 UDP_PORT_FIRST_CONNECTION = 1028
 UDP_PORT = 1025  # Porta para comunicação UDP - porta do broker
 MEU_IP = socket.gethostbyname(socket.gethostname())
-CONEXAO_ATIVA = False
 
 def recebe_conexao(server): 
     conexao, client_addr = server.accept()
@@ -35,36 +34,65 @@ def envia_porta_para_broker(SERVER_IP, TCP_PORT, NOME, MEDICAO, sock):
 def generate_number():
     return round(random.uniform(20, 30), 2)  
 
-def listen_to_socket(server):
-    global CONEXAO_ATIVA
-    while CONEXAO_ATIVA:
-        print("Dispositivo conectado. Para desconectar, digite 'off'.")
+def listen_to_socket(server, dados_dispositivo):
+    while True:
         broker_info, dados = recebe_conexao(server)
         print(broker_info)
+        value = "comando inválido"
         if dados == "dados":
-            value = generate_number()
-            solicita_conexao(value, sock, SERVER_IP)
-            time.sleep(1)
-
-def habilita_desabilita_conexao(server, TCP_PORT):
-    global CONEXAO_ATIVA
-    listener_thread = None
-    while True:
-        time.sleep(1)
-        comando = input("Digite 'on' para escutar na porta ou 'off' para parar de escutar: ")
-        if comando.lower() == "on" and (not CONEXAO_ATIVA):
-            CONEXAO_ATIVA = True
-            listener_thread = threading.Thread(target=listen_to_socket, args=(server,))
-            listener_thread.start()
-        elif comando.lower() == "off" and CONEXAO_ATIVA:
-            CONEXAO_ATIVA = False
-            if listener_thread:
-                listener_thread.join()
-                print("Desconectado. Para o broker se conectar novamente, digite 'on'.")
+            if dados_dispositivo["status"] == True:
+                if dados_dispositivo["valor_aleatorio"] == True:
+                    value = generate_number()
+                else:
+                    value = dados_dispositivo["medicao_atual"]
             else:
-                print("Não há conexão para desconectar.")
+                value = "dispositivo desligado"
+        elif dados == "ligar":
+            dados_dispositivo["status"] = True
+            value = "ligado"
+        elif dados == "desligar":
+            dados_dispositivo["status"] = False
+            value = "desligado"
+
+        solicita_conexao(value, sock, SERVER_IP)
+        print("Para exibir o menu novamente, basta clicar em enter.")
+
+        time.sleep(1)
+
+
+def menu():
+    return input("""
+Informe o comando:
+(1) Alterar medição atual;
+(2) Ligar dispositivo;
+(3) Desligar dispositivo;
+(4) Acionar valores aleatórios;
+>> 
+""")
+
+def permanece_conexao(nome, medicao, server):
+    dados_dispositivo = {"tipo_medicao": medicao,
+                         "nome": nome,
+                         "medicao_atual": '',
+                         "status": False,
+                         "valor_aleatorio": True,
+                         }
+    while True:
+        opcao = menu()
+        if opcao == "1":
+            dados_dispositivo["medicao_atual"] = input("Informe a medição atual >> ")
+            dados_dispositivo["valor_aleatorio"] = False
+        elif opcao == "2" and dados_dispositivo["status"] == False:
+            dados_dispositivo["status"] = True
+            listener_thread = threading.Thread(target=listen_to_socket, args=(server, dados_dispositivo))
+            listener_thread.start()
+        elif opcao == "3" and dados_dispositivo["status"] == True:
+            dados_dispositivo["status"] = False
+            listener_thread.join()
+        elif opcao == "4":
+            dados_dispositivo["valor_aleatorio"] = True
         else:
-            print("Comando inválido.")
+            print("Insira um comando (1, 2, 3 ou 4).")
 
 
 if __name__ == '__main__':
@@ -86,7 +114,7 @@ if __name__ == '__main__':
         MEDICAO = input("Que tipo de medição este dispositivo faz? >> ")
         envia_porta_para_broker(SERVER_IP, TCP_PORT, NOME, MEDICAO, sock)
     
-    habilita_desabilita_conexao(server, TCP_PORT)
+    permanece_conexao(NOME, MEDICAO, server)
 
     server.close()
     
