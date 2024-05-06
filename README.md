@@ -46,7 +46,7 @@ Para emular o dispositivo, abra outro terminal e navegue no diretório clonado:
 Para exibir a aplicação, abra outro terminal e navegue no diretório clonado:
 - cd internet-of-things/aplicacao/
 - sudo docker build -t aplicacao .
-- sudo docker run --network='host' -it -u=$(id -u $USER):$(id -g $USER) -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v --rm aplicacao
+- ```sudo docker run --network='host' -it -u=$(id -u $USER):$(id -g $USER) -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v --rm aplicacao```
 
 Se quiser testar a API independente da aplicação, execute no terminal:
 - curl http://localhost:8000/api/
