@@ -3,8 +3,6 @@ from tkinter import messagebox
 import requests
 import json
 
-url = 'http://localhost:1026/api/'
-
 class Dispositivo():
     def __init__(self, id, tipo_medicao, medicao_atual, esta_ativo, porta, ip, nome):
         self.id = id
@@ -16,11 +14,12 @@ class Dispositivo():
         self.nome = nome
 
 class Application(tk.Tk):
-    def __init__(self):
+    def __init__(self, url):
         super().__init__()
         self.title("Controle de Dispositivos")
         self.geometry("700x500")
         self.create_widgets()
+        self.url = url
 
     def create_widgets(self):
         self.menu_label = tk.Label(self, text="Selecione uma opção:")
@@ -88,7 +87,7 @@ class Application(tk.Tk):
         return dispositivos
 
     def show_devices(self):
-        response = requests.get(url)
+        response = requests.get(self.url)
         try:
             devices = eval(json.loads(response.text).replace("true", "True").replace("null", "None").replace("false", "False"))
             if isinstance(devices, list):
@@ -100,15 +99,15 @@ class Application(tk.Tk):
             self.result_label.config(text="Erro: Resposta inválida da API.")
 
     def turn_on_sensor(self, device_id):
-        response = requests.post(url, data={"id": device_id, "comando": "ligar"})
+        response = requests.post(self.url, data={"id": device_id, "comando": "ligar"})
         self.handle_response(response, "ligado")
 
     def turn_off_sensor(self, device_id):
-        response = requests.post(url, data={"id": device_id, "comando": "desligar"})
+        response = requests.post(self.url, data={"id": device_id, "comando": "desligar"})
         self.handle_response(response, "desligado")
 
     def request_sensor_measurement(self, device_id):
-        response = requests.post(url, data={"id": device_id, "comando": "dados"})
+        response = requests.post(self.url, data={"id": device_id, "comando": "dados"})
         try:
             if 'value' in response.json():
                 self.result_label.config(text=f"Medição atual: {response.json()['value']}")
@@ -118,7 +117,7 @@ class Application(tk.Tk):
             self.result_label.config(text="Erro: Resposta inválida da API.")
 
     def show_server_ip(self):
-        response = requests.post(url, data={"comando": "ver_ip_server"})
+        response = requests.post(self.url, data={"comando": "ver_ip_server"})
         try:
             if 'value' in response.json():
                 self.result_label.config(text=f"IP do servidor: {response.json()['value']}")
@@ -138,5 +137,9 @@ class Application(tk.Tk):
 
 
 if __name__ == "__main__":
-    app = Application()
+    ip = input("Informe o endereço (IP) do servidor: ")
+    # URL da API onde os dados serão enviados
+    url = f'http://{ip}:1026/api/'
+
+    app = Application(url)
     app.mainloop()

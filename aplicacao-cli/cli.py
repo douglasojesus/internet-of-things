@@ -45,45 +45,49 @@ def ver_todos_dispositivos(url):
         esta_ativo = '\033[92m Está ligado. \033[0m' if item.esta_ativo else '\033[91m Está desligado. \033[0m'
         print("ID:", item.id, "- Medição:", item.tipo_medicao, "-", esta_ativo, "- IP:", item.ip, "- Porta:", item.porta)
 
-while True:
+def main():
+
     ip = input("Informe o endereço (IP) do servidor: ")
     # URL da API onde os dados serão enviados
     url = f'http://{ip}:1026/api/'
 
-    opcao = menu()
-    try:
-        if opcao == "1":
-            ver_todos_dispositivos(url)
-        elif opcao == "2":
-            id = input("Informe qual o ID do dispositivo desejado: ")
-            response = requests.post(url, data={"id": id, "comando": "ligar"})
-            response = eval(response.content)
-            if (response["value"] == "ligado"):
-                print(f"\nDispositivo ligado!")
-            else:
-                print(f"Erro: {response}")
-        elif opcao == "3":
-            id = input("Informe qual o ID do dispositivo desejado: ")
-            response = requests.post(url, data={"id": id, "comando": "desligar"})
-            response = eval(response.content)
-            if (response["value"] == "desligado"):
-                print(f"\nDispositivo desligado!")
-            else:
-                print(f"Erro: {response}")
-        elif opcao == "4":
-            id = input("Informe qual o ID do dispositivo desejado: ")
-            response = requests.post(url, data={"id": id, "comando": "dados"})
-            response = eval(response.content)
-            if 'value' in response:
-                print(f"\nMedição atual: {response['value']}")
-            else:
-                print(response)
-        elif opcao == "5":
-            response = requests.post(url, data={"comando": "ver_ip_server"})
-            response = eval(response.content)
-            print(f"\nIP do servidor: {response['value']}")
+    while True:
+        opcao = menu()
+        try:
+            if opcao == "1":
+                ver_todos_dispositivos(url)
+            elif opcao == "2":
+                id = input("Informe qual o ID do dispositivo desejado: ")
+                response = requests.post(url, data={"id": id, "comando": "ligar"})
+                response = eval(response.content)
+                if (response["value"] == "ligado"):
+                    print(f"\nDispositivo ligado!")
+                else:
+                    print(f"Erro: {response}")
+            elif opcao == "3":
+                id = input("Informe qual o ID do dispositivo desejado: ")
+                response = requests.post(url, data={"id": id, "comando": "desligar"})
+                response = eval(response.content)
+                if (response["value"] == "desligado"):
+                    print(f"\nDispositivo desligado!")
+                else:
+                    print(f"Erro: {response}")
+            elif opcao == "4":
+                id = input("Informe qual o ID do dispositivo desejado: ")
+                response = requests.post(url, data={"id": id, "comando": "dados"})
+                response = eval(response.content)
+                if 'value' in response:
+                    print(f"\nMedição atual: {response['value']}")
+                else:
+                    print(response)
+            elif opcao == "5":
+                response = requests.post(url, data={"comando": "ver_ip_server"})
+                response = eval(response.content)
+                print(f"\nIP do servidor: {response['value']}")
 
-        
-        
-    except requests.exceptions.ConnectionError:
-        input("Verifique se o servidor está rodando e aperte enter.")
+            
+            
+        except requests.exceptions.ConnectionError:
+            input("Verifique se o servidor está rodando e aperte enter.")
+
+main()
