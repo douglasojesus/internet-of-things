@@ -32,9 +32,17 @@
 
 # Arquivos principais
 
-Broker: initialize.py, api/views.py, api/scripts/connection_sensor.py, api/buffer/cache.txt, api/models.py, api/urls.py.
-Aplicação: interface.py.
-Sensor: dispositivo.py.
+- Broker: 
+    - initialize.py: arquivo responsável por inicializar o servidor Django e o realizar o recebimento de conexões de dispositivos.
+    - api/views.py: arquivo responsável pela lógica do back-end da API. Lida com o banco de dados, com as requisições da API e se comunica com os dispositivos.
+    - api/scripts/connection_sensor.py: arquivo responsável por obter as funções de comunicação do Broker com os dispositivos.
+    - api/buffer/cache.txt: arquivo responsável por guardar as informações de conexões temporárias dos dispositivos.
+    - api/models.py: arquivo responsável pela criação da entidade Dispositivo do Banco de Dados.
+    - api/urls.py: arquivo de roteamento de urls, que identifica e encaminha para a view correspondente.
+- Aplicação: 
+    - interface.py: arquivo que contém todas as funções e suas chamadas da aplicação.
+- Sensor: 
+    - dispositivo.py: arquivo que contém todas as funções e suas chamadas do dispositivo.
 
 # Arquitetura da solução (componentes e mensagens)
 
