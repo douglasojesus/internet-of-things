@@ -119,8 +119,17 @@ Quando uma solicitação POST é feita na mesma rota:
 
 <p align="justify">A  aplicação também trata possíveis erros de conexão ou respostas inválidas da API, exibindo mensagens de erro na interface gráfica para informar o usuário sobre o problema ocorrido.</p>
 
-
 # Formatação, envio e tratamento de dados
+
+<p align="justify">O tipo de formatação usado para transmitir os dados nesse projeto é o JSON (JavaScript Object Notation). O JSON é amplamente utilizado devido à sua simplicidade, legibilidade e capacidade de representar estruturas de dados de forma eficiente.</p>
+
+<p align="justify">No JSON, os dados são formatados em pares de chave-valor, onde as chaves são strings que identificam os dados e os valores podem ser de diversos tipos, como strings, números, booleanos, arrays e objetos. Essa estrutura facilita a compreensão e interpretação dos dados por humanos.</p>
+
+<p align="justify">Ao enviar dados por meio de uma requisição HTTP em formato JSON, o servidor e o cliente precisam entender e concordar com a estrutura dos dados para que a comunicação seja bem-sucedida. Isso significa que a aplicação que envia os dados deve garantir que eles estejam formatados corretamente de acordo com as expectativas do receptor.</p>
+
+<p align="justify">No tratamento de dados, tanto o servidor quanto o cliente devem ser capazes de interpretar os dados recebidos em JSON e processá-los adequadamente. Isso envolve validar os dados, realizar operações de acordo com o que foi solicitado na requisição e retornar respostas apropriadas, também em formato JSON, para indicar o resultado da operação.</p>
+
+<p align="justify">Na conexão entre dispositivo e Broker, os dados são trocados em formato Byte do Python. Os dados são enviados como um tipo do Python e é decodificado utilizando a função eval, que identifica o tipo do dado recebido e converte para o tipo equivalente em Python. O Dispositivo, por exemplo, na primeira comunicação com o Broker, envia uma tupla convertida em String: f"('{NOME}', '{MEDICAO}', {TCP_PORT}, '{MEU_IP}')". Do lado do Broker, essa String é convertida novamente em tupla usando a função eval. Isso funciona também para a coleta de dados que o Broker solicita do dispositivo. O dispositivo devolve um Float convertido em String. Na hora do Broker decodificar, essa String retorna a Float. Garantindo que o dado de um lado da comunicação seja enviado com uma formatação X, é garantido que o outro lado da comunicação pode receber um dado com a formatação X. Essa característica torna os diferentes dispostivos comunicáveis entre si.</p>
 
 # Tratamento de conexões simultâneas (threads)
 
