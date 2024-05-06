@@ -20,7 +20,7 @@ class MyAPIView(APIView):
             for dados in lista:
                 dados = eval(dados) # format: (nome, medicao, porta, ip)
                 if Dispositivo.objects.filter(porta=dados[2]).first():
-                    return Response({'value': 'já existe um dispositivo salvo com essa porta. configure uma nova porta para o dispositivo.'})
+                    return Response({'value': 'já existe um dispositivo salvo com essa porta: ' + dados[2] + '. configure uma nova porta para o dispositivo.'})
                 dispositivo = Dispositivo()
                 dispositivo.nome = dados[0]
                 dispositivo.tipo_medicao = dados[1] 
@@ -43,22 +43,23 @@ class MyAPIView(APIView):
                 dispositivo_id = dados.get('id')
                 dispositivo = Dispositivo.objects.get(pk=dispositivo_id)
                 if dados.get('comando') == "ligar":
+                    if solicita_conexao(dispositivo, "ligar"):
+                        addr, valor = recebe_conexao()
                     dispositivo.esta_ativo = True
                     dispositivo.save()
-                    return Response({'value': 'ligado'}, status=status.HTTP_201_CREATED)
+                    return Response({'value': valor}, status=status.HTTP_201_CREATED)
                 elif dados.get('comando') == 'desligar':
+                    if solicita_conexao(dispositivo, "desligar"):
+                        addr, valor = recebe_conexao()
                     dispositivo.esta_ativo = False
                     dispositivo.save()
-                    return Response({'value': 'desligado'}, status=status.HTTP_201_CREATED)
+                    return Response({'value': valor}, status=status.HTTP_201_CREATED)
                 elif dados.get('comando') == 'dados':
-                    if dispositivo.esta_ativo:
-                        if solicita_conexao(dispositivo, "dados"):
-                            addr, valor = recebe_conexao()
-                        dispositivo.medicao_atual = valor
-                        dispositivo.save()
-                        return Response({'value': dispositivo.medicao_atual}, status=status.HTTP_201_CREATED)
-                    else:
-                        return Response({'error': 'Dispositivo nao esta ligado.'})              
+                    if solicita_conexao(dispositivo, "dados"):
+                        addr, valor = recebe_conexao()
+                    dispositivo.medicao_atual = valor
+                    dispositivo.save()
+                    return Response({'value': valor}, status=status.HTTP_201_CREATED)           
                 else:
                     return Response({'error': 'Dispositivo so aceita os comandos: ligar, desligar, dados.', 'formato': '{"id": numero, "comando": "comando"}'})
         except Dispositivo.DoesNotExist:

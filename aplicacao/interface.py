@@ -92,7 +92,7 @@ class Application(tk.Tk):
         try:
             devices = eval(json.loads(response.text).replace("true", "True").replace("null", "None").replace("false", "False"))
             if isinstance(devices, list):
-                device_list = "\n".join([f"ID: {d['pk']}, Nome: {d['fields']['nome']}, Medição: {d['fields']['tipo_medicao']}, Está ativo: {d['fields']['esta_ativo']}" for d in devices])
+                device_list = "\n".join([f"ID: {d['pk']}, Nome: {d['fields']['nome']}, Medição: {d['fields']['tipo_medicao']}, Está ativo: {d['fields']['esta_ativo']}, Porta: {d['fields']['porta']}, IP: {d['fields']['ip']}" for d in devices])
                 self.result_label.config(text="Dispositivos disponíveis:\n" + device_list)
             else:
                 self.result_label.config(text="Erro: Resposta inválida da API.")

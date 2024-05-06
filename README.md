@@ -183,9 +183,43 @@ Quando uma solicitação POST é feita na mesma rota:
 
 # Gerenciamento do dispositivo
 
+Sobre o gerenciamento do dispositivo, é possível gerencia-lo por meio da interface do próprio dispositivo, permitindo ações como ligar, desligar, alterar valores da medição atual ou permitir que sejam respondidos valores aleatórios. Essas funcionalidades são implementadas através do menu interativo no arquivo `initialize.py`. Por exemplo:
+
+- **Alterar medição atual:** O usuário pode escolher essa opção no menu e inserir o novo valor da medição atual.
+- **Ligar dispositivo:** Ao selecionar essa opção, o dispositivo é ativado e passa a receber comandos do servidor.
+- **Desligar dispositivo:** Ao selecionar essa opção, o dispositivo é desativado e para de receber comandos do servidor.
+- **Acionar valores aleatórios:** Essa opção faz com que o dispositivo gere valores de medição aleatórios.
+
+Além disso, é possível gerenciar o dispositivo remotamente, como desligar e ligar o dispositivo. Isso é feito através da comunicação com o servidor, onde o servidor envia comandos para ligar ou desligar o dispositivo.
+
+Portanto, tanto a gestão local via interface do próprio dispositivo quanto a gestão remota são implementadas no sistema.
+
 # Desempenho (uso de cache no Broker, filas, threads, etc.)
 
+<p align="justify">O sistema utiliza vários mecanismos para melhorar o desempenho e o tempo de resposta para a aplicação, como:</p>
+
+- Cache no Broker: O sistema utiliza um arquivo de cache (api/buffer/cache.txt) para armazenar temporariamente informações dos dispositivos. Isso evita consultas frequentes ao banco de dados e agiliza o acesso às informações já processadas.
+
+- Filas: A abordagem de recebimento e processamento de mensagens em threads separadas pode ser considerada uma forma de simular uma fila de operações, além do uso da Queue para controlar as operações de escrita no cache. Isso permite lidar com múltiplas conexões simultâneas e processar solicitações de forma mais eficiente.
+
+- Threads: O uso de threads é fundamental para lidar com conexões simultâneas e manter o sistema responsivo. As threads são utilizadas para receber conexões de dispositivos, processar comandos, enviar dados para o broker e gerenciar a interface do dispositivo. No sistema, isso gera um grande desempenho, por permitir que dispositivos se conectem com o Broker sem a necessidade do usuário efetuar essa conexão através do servidor web e que os dispositivos possam escutar as requisições TCP do Broker e permitir a interação com o menu para o gerenciador do dispositivo ao mesmo tempo.
+
+- Protocolos de comunicação eficientes: O sistema utiliza protocolos como TCP e UDP de forma estratégica. O TCP é empregado para garantir a entrega confiável de dados, enquanto o UDP é utilizado para comunicações em tempo real e de baixa latência.
+
+- Optimização de consultas ao banco de dados: Embora não seja obrigatório no projeto, mas uma possibilidade, e não esteja detalhado no código fornecido, é razoável supor que o sistema utilize consultas otimizadas ao banco de dados, como indexação adequada de campos frequentemente acessados, para garantir tempos de resposta rápidos em operações de leitura e escrita.
+
+<p align="justify">Portanto, o sistema adota uma série de práticas e mecanismos para melhorar o desempenho e reduzir o tempo de resposta, garantindo uma experiência eficiente para os usuários da aplicação.</p>
+
 # Confiabilidade da solução (tratamento das conexões)
+
+Supondo a possibilidade de que os 3 nós estão conectados (Broker, dispositivo e aplicação) e que pode haver a remoção e colocação de alguns desses nós do sistema, existem algumas considerações:
+
+1. Se o Broker for desconectado:
+    - Nesse caso, utilizando o Docker, quando o servidor Broker é rodado, caso haja a parada e remoção do mesmo, os arquivos desse contêiner serão excluídos. Se um novo Broker for rodado, ou seja, um novo contêiner for criado a partir da imagem carregada, novos arquivos serão carregados. Dentre esses arquivos está o db.sqlite3, que é o Banco de Dados usado nesse projeto. Todos os registros nele feito serão excluídos. Nesse caso, será necessário que os dispositivos sejam conectados novamente ao Broker, ou então será necessário fazer migração de Banco de Dados, ou seja, utilizar uma outra tecnologia que tenha um servidor de Banco de Dados externo, o que não é um requisito para esse projeto. A aplicação não conseguirá se conectar com o servidor, exibindo uma mensagem para o usuário. O dispositivo não conseguirá se conectar inicialmente com o Broker caso ele não esteja ativo. Todos esses comportamentos, são comportamentos esperados.
+2. Se o dispositivo for desconectado:
+    - Nesse caso, o Broker e a aplicação não serão afetados. Se a aplicação solicitar dados de um dispositivo desconectado, será retornado que o dispositivo está "fora da tomada", fazendo uma analogia a sua remoção. Se esse dispositivo for colocado novamente no sistema, a interface do dispositivo pergunta se o dispositivo já foi conectado ao Broker. Se sim, não haverá problema caso seja inserido a mesma porta que foi adicionado a esse dispositivo quando ele foi conectado ao Broker.
+3. Se a aplicação for desconectada:
+    - Nesse caso, nem o Broker e nem o dispositivo serão afetados. Ao conectar novamente, o usuário ainda poderá fazer as requisições sem problemas para o Broker.
 
 # Documentação do código
 
