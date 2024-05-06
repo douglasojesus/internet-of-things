@@ -1,8 +1,9 @@
-import tkinter as tk
-from tkinter import messagebox
-import requests
-import json
+import tkinter as tk # Importa a biblioteca Tkinter para criar interfaces gráficas
+from tkinter import messagebox # Importa a biblioteca messagebox para exibir mensagens de erro
+import requests # requests para fazer requisições HTTP
+import json # Importa a biblioteca json para manipular dados no formato JSON
 
+# Classe que representa os dados dos dispositivos
 class Dispositivo():
     def __init__(self, id, tipo_medicao, medicao_atual, esta_ativo, porta, ip, nome):
         self.id = id
@@ -14,13 +15,18 @@ class Dispositivo():
         self.nome = nome
 
 class Application(tk.Tk):
+    # Inicializa a aplicação tk
     def __init__(self, url):
         super().__init__()
+        # Define o título da janela
         self.title("Controle de Dispositivos")
+        # Define o tamanho da janela
         self.geometry("700x500")
+        # Chama o método para criar os widgets na interface
         self.create_widgets()
         self.url = url
 
+    # Cria os widgets na interface gráfica
     def create_widgets(self):
         self.menu_label = tk.Label(self, text="Selecione uma opção:")
         self.menu_label.pack()
@@ -46,6 +52,7 @@ class Application(tk.Tk):
         self.result_label = tk.Label(self, text="")
         self.result_label.pack()
 
+    # Manipula as opções selecionadas no menu
     def handle_option(self):
         try:
             option = self.menu_options.get()
@@ -72,6 +79,7 @@ class Application(tk.Tk):
         except requests.exceptions.ConnectionError:
             messagebox.showerror("Erro", "Verifique se o servidor está conectado!")
 
+    # Desserializa a resposta JSON da API em objetos Dispositivo
     def desserializacao(self, lista_json):
         dispositivos = []
         for objeto in lista_json:
@@ -86,6 +94,7 @@ class Application(tk.Tk):
             dispositivos.append(dispositivo)
         return dispositivos
 
+    # Exibe os dispositivos disponíveis na interface
     def show_devices(self):
         response = requests.get(self.url)
         try:
@@ -98,14 +107,17 @@ class Application(tk.Tk):
         except json.JSONDecodeError:
             self.result_label.config(text="Erro: Resposta inválida da API.")
 
+    # Envia um comando para ligar o sensor
     def turn_on_sensor(self, device_id):
         response = requests.post(self.url, data={"id": device_id, "comando": "ligar"})
         self.handle_response(response, "ligado")
 
+    # Envia um comando para desligar o sensor
     def turn_off_sensor(self, device_id):
         response = requests.post(self.url, data={"id": device_id, "comando": "desligar"})
         self.handle_response(response, "desligado")
 
+    # Solicita a medição atual do sensor
     def request_sensor_measurement(self, device_id):
         response = requests.post(self.url, data={"id": device_id, "comando": "dados"})
         try:
@@ -116,6 +128,7 @@ class Application(tk.Tk):
         except json.JSONDecodeError:
             self.result_label.config(text="Erro: Resposta inválida da API.")
 
+    # Exibe o IP do servidor
     def show_server_ip(self):
         response = requests.post(self.url, data={"comando": "ver_ip_server"})
         try:
@@ -126,6 +139,7 @@ class Application(tk.Tk):
         except json.JSONDecodeError:
             self.result_label.config(text="Erro: Resposta inválida da API.")
 
+    # Trata a resposta da API
     def handle_response(self, response, success_message):
         try:
             if 'value' in response.json() and response.json()['value'] == success_message:
@@ -141,5 +155,5 @@ if __name__ == "__main__":
     # URL da API onde os dados serão enviados
     url = f'http://{ip}:1026/api/'
 
-    app = Application(url)
-    app.mainloop()
+    app = Application(url)  # Cria uma instância da aplicação com a URL da API
+    app.mainloop()  # Inicia o loop principal da interface gráfica

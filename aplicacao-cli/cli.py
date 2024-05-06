@@ -1,6 +1,5 @@
 import requests
 import json
-import time
 
 def menu():
     return input("""
@@ -11,6 +10,7 @@ def menu():
 (5) Ver IP do servidor (broker);
 >>> """)
 
+# Função para exibir o menu de opções e obter a escolha do usuário
 class Dispositivo():
     def __init__(self, id, tipo_medicao, medicao_atual, esta_ativo, porta, ip, nome):
         self.id = id
@@ -21,6 +21,7 @@ class Dispositivo():
         self.ip = ip
         self.nome = nome
 
+# Função para desserializar uma lista JSON em objetos Dispositivo
 def desserializacao(lista_json):
     dispositivos = []
     for objeto in lista_json:
@@ -35,7 +36,7 @@ def desserializacao(lista_json):
         dispositivos.append(dispositivo)
     return dispositivos
 
-
+# Função para desserializar uma lista JSON em objetos Dispositivo
 def ver_todos_dispositivos(url):
     response = requests.get(url)
     response = eval(json.loads(response.text).replace("true", "True").replace("null", "None").replace("false", "False"))
@@ -56,6 +57,7 @@ def main():
         try:
             if opcao == "1":
                 ver_todos_dispositivos(url)
+            #  Envia comando para ligar o sensor
             elif opcao == "2":
                 id = input("Informe qual o ID do dispositivo desejado: ")
                 response = requests.post(url, data={"id": id, "comando": "ligar"})
@@ -64,6 +66,7 @@ def main():
                     print(f"\nDispositivo ligado!")
                 else:
                     print(f"Erro: {response}")
+            #  Envia comando para desligar o sensor
             elif opcao == "3":
                 id = input("Informe qual o ID do dispositivo desejado: ")
                 response = requests.post(url, data={"id": id, "comando": "desligar"})
@@ -72,6 +75,7 @@ def main():
                     print(f"\nDispositivo desligado!")
                 else:
                     print(f"Erro: {response}")
+            #  Envia comando para obter dados do sensor
             elif opcao == "4":
                 id = input("Informe qual o ID do dispositivo desejado: ")
                 response = requests.post(url, data={"id": id, "comando": "dados"})
@@ -80,12 +84,12 @@ def main():
                     print(f"\nMedição atual: {response['value']}")
                 else:
                     print(response)
+            #  Envia comando para ver o ip do servidor
             elif opcao == "5":
                 response = requests.post(url, data={"comando": "ver_ip_server"})
                 response = eval(response.content)
                 print(f"\nIP do servidor: {response['value']}")
 
-            
             
         except requests.exceptions.ConnectionError:
             input("Verifique se o servidor está rodando e aperte enter.")

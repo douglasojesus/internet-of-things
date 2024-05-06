@@ -1,6 +1,6 @@
 from django.db import models
 
-# Create your models here.
+# Entidade que representa o registro do dispositivo no banco de dados
 class Dispositivo(models.Model):
     tipo_medicao = models.CharField(max_length=30)
     medicao_atual = models.FloatField(null=True, blank=True)

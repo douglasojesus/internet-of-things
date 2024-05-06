@@ -30,8 +30,7 @@ def recebe_porta_do_dispositivo():
 
         # Retorna informando que foi recebido com sucesso.
         sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        print("DATA --- DATA[3] --- DATA[2]")
-        print(data, data[3], data[2])
+        print("Received data: ", data)
         sock_tcp.connect((data[3], data[2])) # (ip, porta)
         sock_tcp.sendall("recebido".encode())
         server_udp.close()
@@ -40,29 +39,7 @@ def recebe_porta_do_dispositivo():
 
         time.sleep(1)
 
-"""# Função para simular recebimento contínuo de dispositivos
-def recebe_porta_do_dispositivo():
-    while True:
-        # Recebe conexão do dispositivo
-        print("Aguardando conexão de dispositivo...")
-        server_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        server_udp.bind((HOST, UDP_PORT_FIRST_CONNECTION)) # escutando na porta UDP_PORT
-        data, addr = server_udp.recvfrom(1024)
-        data = eval(data) # format: (nome, medicao, porta, ip)
-
-        # Retorna informando que foi recebido com sucesso.
-        sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        print("DATA --- DATA[3] --- DATA[2]")
-        print(data, data[3], data[2])
-        sock_tcp.connect((data[3], data[2])) # (ip, porta)
-        sock_tcp.sendall("recebido".encode())
-        server_udp.close()
-
-        with open('api/buffer/cache.txt', 'a+') as arquivo:
-            arquivo.write(f"('{data[0]}', '{data[1]}', {data[2]}, '{data[3]}')\n")
-
-        time.sleep(1)  # Simulação de espera por conexões"""
-
+# Função que realiza as migrações e roda o servidor Django
 def iniciar_servidor_django():
 	os.system("python3 manage.py makemigrations")
 	os.system("python3 manage.py migrate")

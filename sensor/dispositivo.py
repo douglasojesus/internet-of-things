@@ -8,6 +8,7 @@ UDP_PORT_FIRST_CONNECTION = 1028
 UDP_PORT = 1025  # Porta para comunicação UDP - porta do broker
 MEU_IP = socket.gethostbyname(socket.gethostname())
 
+# Função para escutar conexão na porta TCP
 def recebe_conexao(server): 
     conexao, client_addr = server.accept()
     data = conexao.recv(1024).decode()
@@ -16,11 +17,13 @@ def recebe_conexao(server):
     conexao.close()
     return client_addr, data
 
+# Função solicitar conexão na porta UDP
 def solicita_conexao(data, sock, SERVER_IP):
     data = f"{data}"
     sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
     print(f"Dados enviados: {data}")
 
+# Função para enviar informações do dispositivo para o broker
 def envia_porta_para_broker(SERVER_IP, TCP_PORT, NOME, MEDICAO, sock):
     while True:
         time.sleep(1)
@@ -31,9 +34,11 @@ def envia_porta_para_broker(SERVER_IP, TCP_PORT, NOME, MEDICAO, sock):
         if recebido[1] == "recebido":
             break
 
+# Função para gerar um número flutuante aleatório
 def generate_number():
     return round(random.uniform(20, 30), 2)  
 
+# Função que escuta conexão na porta TCP (comando), interpreta esses comandos, atualiza os valores locais e responde na porta UDP.
 def listen_to_socket(server, dados_dispositivo):
     while True:
         broker_info, dados = recebe_conexao(server)
@@ -59,7 +64,7 @@ def listen_to_socket(server, dados_dispositivo):
 
         time.sleep(1)
 
-
+# Menu interativo para o usuário acessar
 def menu():
     return input("""
 Informe o comando:
@@ -70,6 +75,7 @@ Informe o comando:
 >> 
 """)
 
+# Função responsável por manter conexão de recebimento de comandos do Broker e gerenciamento local do dispositivo
 def permanece_conexao(nome, medicao, server):
     dados_dispositivo = {"tipo_medicao": medicao,
                          "nome": nome,
@@ -104,7 +110,6 @@ if __name__ == '__main__':
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, TCP_PORT))
     server.listen(1) 
-    # tentar colocar para fechar quando o usuário inserir off e abrir quando tiver em on
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     

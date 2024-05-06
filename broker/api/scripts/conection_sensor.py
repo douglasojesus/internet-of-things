@@ -47,19 +47,3 @@ def recebe_porta_do_dispositivo():
     sock_tcp.sendall(is_recebido.encode())
     server_udp.close()
     return data # formato: (id, porta, IP)
-
-def main():
-    threads = []
-    while True:
-        # Inicia uma thread para lidar com a conexão do dispositivo
-        recebe_dados_udp = threading.Thread(target=recebe_conexao, args=())
-        threads.append(recebe_dados_udp)
-        recebe_dados_udp.start()
-
-        if thread in threads:
-            for thread in threads:
-                recebe_dados_udp.join()  # Aguarda a conclusão da thread
-                resultado = recebe_dados_udp
-                threads.remove(thread)
-                # Se o resultado tem a informação da aplicação que solicitou
-                # manipula resultado para retornar para aplicação correta

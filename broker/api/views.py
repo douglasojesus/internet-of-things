@@ -1,21 +1,31 @@
-from django.shortcuts import render
-from .scripts.conection_sensor import solicita_conexao, recebe_conexao, ver_ip
+# Importa a função render do Django para renderização de templates
+from django.shortcuts import render  
+# Importa funções personalizadas relacionadas à conexão com sensores
+from .scripts.conection_sensor import solicita_conexao, recebe_conexao, ver_ip  
 
+# Importa o status HTTP do Django REST Framework
+from rest_framework import status  
+# Importa a classe APIView do Django REST Framework
+from rest_framework.views import APIView  
+# Importa a classe Response do Django REST Framework
+from rest_framework.response import Response  
+# Importa o modelo Dispositivo do Django
+from .models import Dispositivo  
+# Importa a função serialize do Django para serialização de objetos
+from django.core.serializers import serialize  
 
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .models import Dispositivo
-from django.core.serializers import serialize
-
+# Classe de visualização para manipulação de dados através da API
 class MyAPIView(APIView):
+    # Método para lidar com solicitações GET
     def get(self, request):
+        # Acessa o arquivo cache.txt e coleta todos os dispositivos salvos no arquivo e depois limpa o arquivo
         with open('api/buffer/cache.txt', 'r+') as arquivo:
             lista = []
             for linha in arquivo:
                 lista.append(linha)
             arquivo.seek(0) 
             arquivo.truncate(0)
+        # Se houve dispositivos em cache.txt, é percorrido entre todos esses dispositivos e salva sua correspondência no banco de dados
         if len(lista) > 0:
             for dados in lista:
                 dados = eval(dados) # format: (nome, medicao, porta, ip)
@@ -33,8 +43,8 @@ class MyAPIView(APIView):
         dispositivos_json = serialize('json', dispositivos)
         return Response(dispositivos_json)
 
+    # Método para lidar com solicitações GET
     def post(self, request):
-        # verifica o tipo de solicitação. se é temperatura, etc.
         # Acessando os dados enviados pelo usuário no corpo da requisição
         dados = request.data 
         try:
@@ -70,12 +80,9 @@ class MyAPIView(APIView):
             return Response({'error': 'Dispositivo nao encontrado.'}, status=status.HTTP_404_NOT_FOUND)
         except UnboundLocalError:
             return Response({'error': 'Dispositivo pode estar fora da tomada.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        #except Exception as e:
-        #    return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def my_view(request):
     return render(request, "index.html")
-
-# o back-end recebe o comando + um identificador da aplicação que efetua a requisição
-
 
