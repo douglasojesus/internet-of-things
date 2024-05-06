@@ -159,7 +159,7 @@ Quando uma solicitação POST é feita na mesma rota:
 
 <p align="justify">No entanto, o uso de threads pode trazer problemas de concorrência, como condições de corrida e acesso concorrente a recursos compartilhados. No código do uso da thread, é possível identificar uma situação em que esses problemas podem surgir:</p>
 
-1. Acesso ao arquivo cache.txt: A função recebe_porta_do_dispositivo escreve dados no arquivo cache.txt enquanto outras threads podem estar acessando ou modificando esse mesmo arquivo. Isso pode levar a condições de corrida e resultados inesperados no conteúdo do arquivo.
+- Acesso ao arquivo cache.txt: A função recebe_porta_do_dispositivo escreve dados no arquivo cache.txt enquanto outras threads podem estar acessando ou modificando esse mesmo arquivo. Isso pode levar a condições de corrida e resultados inesperados no conteúdo do arquivo.
 
 <p align="justify">Para lidar com esses problemas de concorrência, a prática do uso de filas e buffers foram aplicadas, já que, ao lidar com múltiplas threads que acessam recursos compartilhados, o uso dessas estratégias podem ajudar a coordenar o acesso aos dados de forma segura e ordenada, evitando problemas de concorrência.</p>
 
