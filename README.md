@@ -34,7 +34,23 @@
 
 ## Camada de aplicação
 
+<p align="justify">Na camada de aplicação, que atua como a interface para interações entre sistemas via rede, utiliza-se o modelo cliente-servidor para a comunicação eficiente entre o broker e os dispositivos.</p>
+
+<p align="justify">Nesse modelo, o Broker assume o papel de servidor, fornecendo informações para aplicações (servidor HTTP) e dispositivos (servidor UDP). Ele permanece sempre ativo, recebendo solicitações iniciais dos dispositivos e gerenciando as requisições feitas pela interface do usuário, além de encaminhar essas solicitações aos dispositivos e retornar suas respostas. Do lado do dispositivo, ele também é um servidor, mas do tipo TCP, para escutar na porta dinâmica (registrada no momento de ligação do dispositivo) comandos recebidos do Broker.</p>
+
+<p align="justify">Inicialmente, o Dispositivo inicia uma comunicação UDP para estabelecer uma conexão com o Broker, enviando um nome, tipo de medição, porta e seu IP, que serão utilizados posteriormente. Após esse processo, o Dispositivo fica disponível para receber comandos do Broker, como o envio de dados.</p>
+
+<p align="justify">Do outro lado, o Broker recebe a primeira comunicação do dispositivo e registra os dados em uma cache. Quando é feito uma requisição através da API REST, os dados são removidos da cache e salvos no Banco de Dados. Essa foi uma escolha para melhorar o desempenho do servidor. Após salvo o dispositivo, o Broker enviará requisições TCP para o dispositivo com a porta e IP adicionados anteriormente. Essas requisições estarão de acordo com as requisições feitas pelo usuário através da API REST.</p>
+
 ## Camada de transporte
+
+<p align="justify">Na camada de transporte, a integração entre os dispositivos e o Broker foi realizada por meio de protocolos específicos, como solicitados no problema inicial. A seguir, descrevo detalhadamente a dinâmica dessa interação entre os dispositivos e o Broker:</p>
+
+### Protocolos de Comunicação:
+
+<p align="justify">O Broker utiliza o protocolo UDP (User Datagram Protocol) para receber dados dos dispositivos, operando em uma porta dedicada (porta 1025). Essa escolha foi feita devido a descrição da atividade proposta e às suas características que resultam em menor sobrecarga, devido a falta de controle de fluxo e retransmissão, o que gera menor tempo de resposta. Os dispositivos emulados transmitem os dados para o Broker por meio dessa porta UDP.</p>
+
+<p align="justify">Quando o Broker necessita estabelecer contato com um dispositivo específico, ele inicia uma conexão TCP (Transmission Control Protocol) com o dispositivo correspondente. Por meio dessa conexão TCP, o Broker envia comandos ou requisita dados ao dispositivo, visto a necessidade de uma abordagem confiável para os comandos de gerenciamento. Ele alcança essa abordagem confiável por meio de técnicas como confirmações de recebimento e retransmissão de dados perdidos, o que garante que comandos e solicitações não sejam perdidos. </p>
 
 # Interface da Aplicação (REST)
 
