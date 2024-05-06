@@ -14,6 +14,7 @@
 - 🔨 Framework Web Django.
 - 🔨 Bibliotecas tkinter, requests, socket, os, queue, threading, time.
 - 🔨 Docker
+- 🔨 Postman
 
 # Arquivos principais
 
