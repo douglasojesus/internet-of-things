@@ -71,7 +71,9 @@ class MyAPIView(APIView):
                             addr, valor = recebe_conexao()
                         if valor != 'dispositivo desligado':
                             dispositivo.medicao_atual = valor
-                            dispositivo.save()
+                        else:
+                            dispositivo.esta_ativo = False
+                        dispositivo.save()
                         return Response({'value': valor}, status=status.HTTP_201_CREATED)     
                     else:
                         return Response({'error': 'Dispositivo esta desligado.'})      
