@@ -54,6 +54,46 @@
 
 # Interface da Aplicação (REST)
 
+<p align="justify">A interface da aplicação baseada em REST é implementada por meio de um código que utiliza a biblioteca tkinter para a criação de uma interface gráfica de usuário (GUI). Esta GUI permite interações com os serviços de rede do sistema, facilitando a comunicação entre o usuário e os dispositivos controlados pelo broker. Quanto às requisições, a interface usa a biblioteca requests para efetuar requisições para a API.</p>
+
+<p align="justify">O código da aplicação define uma classe Application, que herda as funcionalidades da classe tk.Tk do tkinter. Nesta classe, são criados elementos visuais como rótulos, menus, campos de entrada e botões para interação do usuário. Através desses elementos, o usuário pode realizar diversas operações relacionadas aos dispositivos controlados pelo broker.</p>
+
+## Verbos e Rotas na Camada de Aplicação
+
+### 1. Ver dispositivos disponíveis
+<p align="justify">Ao selecionar esta opção, a aplicação faz uma requisição GET para a API do broker, obtendo uma lista de dispositivos disponíveis. Essa lista é exibida na interface gráfica para o usuário. Quando essa requisição é feita, os dispositivos salvos em cache são adicionados no Banco de Dados.</p>
+- **Verbo**: GET
+- **Rota**: `http://localhost:1026/api/`
+
+### 2. Ligar sensor
+<p align="justify">Permite ao usuário enviar um comando para ligar um sensor específico. A aplicação envia uma requisição POST para a API do broker com o ID do dispositivo e o comando "ligar".</p>
+- **Verbo**: POST
+- **Rota**: `http://localhost:1026/api/`
+- **Parâmetros**: `{"id": device_id, "comando": "ligar"}`
+
+### 3. Desligar sensor
+<p align="justify">Similar ao item anterior, porém envia o comando "desligar".</p>
+- **Verbo**: POST
+- **Rota**: `http://localhost:1026/api/`
+- **Parâmetros**: `{"id": device_id, "comando": "desligar"}`
+
+### 4. Solicitar medição atual do sensor
+<p align="justify">Esta opção permite ao usuário solicitar a medição atual de um sensor específico. A aplicação envia uma requisição POST para a API do broker com o ID do dispositivo e o comando "dados". </p>
+- **Verbo**: POST
+- **Rota**: `http://localhost:1026/api/`
+- **Parâmetros**: `{"id": device_id, "comando": "dados"}`
+
+### 5. Ver IP do servidor (broker)
+<p align="justify">Ao selecionar esta opção, a aplicação envia uma requisição POST para a API do broker com o comando "ver_ip_server", obtendo assim o IP do servidor. </p>
+- **Verbo**: POST
+- **Rota**: `http://localhost:1026/api/`
+- **Parâmetros**: `{"comando": "ver_ip_server"}`
+
+<p align="justify">Estas são as operações que a camada de aplicação executa na interação com a API do broker, utilizando os verbos HTTP e as rotas correspondentes para realizar as ações desejadas, como consultar dispositivos disponíveis, controlar sensores e obter informações do servidor (broker).</p>
+
+<p align="justify">A  aplicação também trata possíveis erros de conexão ou respostas inválidas da API, exibindo mensagens de erro na interface gráfica para informar o usuário sobre o problema ocorrido.</p>
+
+
 # Formatação, envio e tratamento de dados
 
 # Tratamento de conexões simultâneas (threads)
