@@ -62,7 +62,7 @@ def main():
                 id = input("Informe qual o ID do dispositivo desejado: ")
                 response = requests.post(url, data={"id": id, "comando": "ligar"})
                 response = eval(response.content)
-                if (response["value"] == "ligado"):
+                if ("value" in response) and (response["value"] == "ligado"):
                     print(f"\nDispositivo ligado!")
                 else:
                     print(f"Erro: {response}")
@@ -71,7 +71,7 @@ def main():
                 id = input("Informe qual o ID do dispositivo desejado: ")
                 response = requests.post(url, data={"id": id, "comando": "desligar"})
                 response = eval(response.content)
-                if (response["value"] == "desligado"):
+                if ("value" in response) and (response["value"] == "desligado"):
                     print(f"\nDispositivo desligado!")
                 else:
                     print(f"Erro: {response}")

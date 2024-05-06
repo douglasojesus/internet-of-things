@@ -83,6 +83,8 @@ def permanece_conexao(nome, medicao, server):
                          "status": False,
                          "valor_aleatorio": True,
                          }
+    listener_thread = threading.Thread(target=listen_to_socket, args=(server, dados_dispositivo))
+    listener_thread.start()
     while True:
         opcao = menu()
         if opcao == "1":
@@ -90,15 +92,13 @@ def permanece_conexao(nome, medicao, server):
             dados_dispositivo["valor_aleatorio"] = False
         elif opcao == "2" and dados_dispositivo["status"] == False:
             dados_dispositivo["status"] = True
-            listener_thread = threading.Thread(target=listen_to_socket, args=(server, dados_dispositivo))
-            listener_thread.start()
         elif opcao == "3" and dados_dispositivo["status"] == True:
             dados_dispositivo["status"] = False
-            listener_thread.join()
         elif opcao == "4":
             dados_dispositivo["valor_aleatorio"] = True
         else:
             print("Insira um comando (1, 2, 3 ou 4).")
+    listener_thread.join()
 
 
 if __name__ == '__main__':
@@ -119,6 +119,8 @@ if __name__ == '__main__':
         MEDICAO = input("Que tipo de medição este dispositivo faz? >> ")
         envia_porta_para_broker(SERVER_IP, TCP_PORT, NOME, MEDICAO, sock)
     
+
+
     permanece_conexao(NOME, MEDICAO, server)
 
     server.close()
