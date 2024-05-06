@@ -120,8 +120,7 @@ if __name__ == '__main__':
         envia_porta_para_broker(SERVER_IP, TCP_PORT, NOME, MEDICAO, sock)
     
 
-
-    permanece_conexao(NOME, MEDICAO, server)
+    permanece_conexao("", "", server)
 
     server.close()
     

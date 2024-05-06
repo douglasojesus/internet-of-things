@@ -53,36 +53,39 @@ class MyAPIView(APIView):
             else:
                 dispositivo_id = dados.get('id')
                 dispositivo = Dispositivo.objects.get(pk=dispositivo_id)
-                if dados.get('comando') == "ligar":
-                    if solicita_conexao(dispositivo, "ligar"):
-                        addr, valor = recebe_conexao()
-                    dispositivo.esta_ativo = True
-                    dispositivo.save()
-                    return Response({'value': valor}, status=status.HTTP_201_CREATED)
-                elif dados.get('comando') == 'desligar':
-                    if solicita_conexao(dispositivo, "desligar"):
-                        addr, valor = recebe_conexao()
+                try:
+                    if dados.get('comando') == "ligar":
+                        if solicita_conexao(dispositivo, "ligar"):
+                            addr, valor = recebe_conexao()
+                        dispositivo.esta_ativo = True
+                        dispositivo.save()
+                        return Response({'value': valor}, status=status.HTTP_201_CREATED)
+                    elif dados.get('comando') == 'desligar':
+                        if solicita_conexao(dispositivo, "desligar"):
+                            addr, valor = recebe_conexao()
+                        dispositivo.esta_ativo = False
+                        dispositivo.save()
+                        return Response({'value': valor}, status=status.HTTP_201_CREATED)
+                    elif dados.get('comando') == 'dados':
+                        if dispositivo.esta_ativo:
+                            if solicita_conexao(dispositivo, "dados"):
+                                addr, valor = recebe_conexao()
+                            if valor != 'dispositivo desligado':
+                                dispositivo.medicao_atual = valor
+                            else:
+                                dispositivo.esta_ativo = False
+                            dispositivo.save()
+                            return Response({'value': valor}, status=status.HTTP_201_CREATED)     
+                        else:
+                            return Response({'error': 'Dispositivo esta desligado.'})      
+                    else:
+                        return Response({'error': 'Dispositivo so aceita os comandos: ligar, desligar, dados.', 'formato': '{"id": numero, "comando": "comando"}'})
+                except UnboundLocalError:
                     dispositivo.esta_ativo = False
                     dispositivo.save()
-                    return Response({'value': valor}, status=status.HTTP_201_CREATED)
-                elif dados.get('comando') == 'dados':
-                    if dispositivo.esta_ativo:
-                        if solicita_conexao(dispositivo, "dados"):
-                            addr, valor = recebe_conexao()
-                        if valor != 'dispositivo desligado':
-                            dispositivo.medicao_atual = valor
-                        else:
-                            dispositivo.esta_ativo = False
-                        dispositivo.save()
-                        return Response({'value': valor}, status=status.HTTP_201_CREATED)     
-                    else:
-                        return Response({'error': 'Dispositivo esta desligado.'})      
-                else:
-                    return Response({'error': 'Dispositivo so aceita os comandos: ligar, desligar, dados.', 'formato': '{"id": numero, "comando": "comando"}'})
+                    return Response({'error': 'Dispositivo pode estar fora da tomada.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Dispositivo.DoesNotExist:
-            return Response({'error': 'Dispositivo nao encontrado.'}, status=status.HTTP_404_NOT_FOUND)
-        except UnboundLocalError:
-            return Response({'error': 'Dispositivo pode estar fora da tomada.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'Dispositivo nao encontrado.'}, status=status.HTTP_404_NOT_FOUND)  
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
