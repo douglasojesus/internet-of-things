@@ -10,19 +10,19 @@
 
 # Sumário
 
-<ul>
-  <li><a href="#Ferramentas utilizadas"><b>Ferramentas utilizadas</b></li>
-  <li><a href="#introducao"> <b>Introdução</b></li>
-  <li><a href="#requisitos"> <b>Objetivos e Requisitos do problema</b> </a></li>
-  <li><a href="#recursos"> <b>Recursos Utilizados</b></li>
-  <li><a href="#desenvolvimento"> <b>Desenvolvimento e Descrição em Alto Nível</b> </a> </li>
-  <li><a href="#descricao-e-analise-dos-testes"> <b>Descrição e Análise dos Testes e Simulações, Resultados e Discussões</b> </a></li>
-  <li><a href="#conclusao"> <b>Conclusão</b> </a></li>
-  <li><a href="#bibliografia"> <b>Bibliografia</b> </a></li>
-  <li><a href="#script-de-compilacao"> <b>Uso do projeto</b> </a></li>
-</ul>
+1. Ferramentas utilizadas;
+2. Arquivos principais;
+3. Arquitetura da solução (componentes e mensagens);
+4. Protocolo de comunicação entre dispositivo e Broker: camada de aplicação e transporte;
+5. Interface da Aplicação (REST);
+6. Formatacao, envio e tratamento de dados;
+7. Tratamento de conexões simultaneas (threads);
+8. Gerenciamento do dispositivo;
+9. Desempenho (uso de cache no Broker, filas, threads, etc.);
+10. Confiabilidade da solução (tratamento das conexões);
+11. Emprego do Docker;
 
-# Ferramentas utilizadas
+# Ferramentas utilizadas 
 
 - 🔨 Linguagem de Programação Python.
 - 🔨 Framework Web Django.
