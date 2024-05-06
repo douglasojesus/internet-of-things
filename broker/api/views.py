@@ -26,6 +26,7 @@ class MyAPIView(APIView):
                 dispositivo.tipo_medicao = dados[1] 
                 dispositivo.porta = dados[2]
                 dispositivo.ip = dados[3]
+                dispositivo.esta_ativo = False
                 dispositivo.save()
         dispositivos = Dispositivo.objects.all()
         # Serializa os objetos Dispositivo em JSON
@@ -55,11 +56,14 @@ class MyAPIView(APIView):
                     dispositivo.save()
                     return Response({'value': valor}, status=status.HTTP_201_CREATED)
                 elif dados.get('comando') == 'dados':
-                    if solicita_conexao(dispositivo, "dados"):
-                        addr, valor = recebe_conexao()
-                    dispositivo.medicao_atual = valor
-                    dispositivo.save()
-                    return Response({'value': valor}, status=status.HTTP_201_CREATED)           
+                    if dispositivo.esta_ativo:
+                        if solicita_conexao(dispositivo, "dados"):
+                            addr, valor = recebe_conexao()
+                        dispositivo.medicao_atual = valor
+                        dispositivo.save()
+                        return Response({'value': valor}, status=status.HTTP_201_CREATED)     
+                    else:
+                        return Response()      
                 else:
                     return Response({'error': 'Dispositivo so aceita os comandos: ligar, desligar, dados.', 'formato': '{"id": numero, "comando": "comando"}'})
         except Dispositivo.DoesNotExist:
