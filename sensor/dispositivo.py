@@ -22,7 +22,7 @@ def solicita_conexao(data, sock, SERVER_IP):
     sock.sendto(data.encode(), (SERVER_IP, UDP_PORT))
     print(f"Dados enviados: {data}")
 
-def envia_porta_para_broker(SERVER_IP, TCP_PORT, NOME, MEDICAO):
+def envia_porta_para_broker(SERVER_IP, TCP_PORT, NOME, MEDICAO, sock):
     while True:
         time.sleep(1)
         data = f"('{NOME}', '{MEDICAO}', {TCP_PORT}, '{MEU_IP}')"
@@ -46,13 +46,13 @@ def listen_to_socket(server):
             solicita_conexao(value, sock, SERVER_IP)
             time.sleep(1)
 
-def habilita_desabilita_conexao(server):
+def habilita_desabilita_conexao(server, TCP_PORT):
     global CONEXAO_ATIVA
     listener_thread = None
     while True:
         time.sleep(1)
         comando = input("Digite 'on' para escutar na porta ou 'off' para parar de escutar: ")
-        if comando.lower() == "on" and not CONEXAO_ATIVA:
+        if comando.lower() == "on" and (not CONEXAO_ATIVA):
             CONEXAO_ATIVA = True
             listener_thread = threading.Thread(target=listen_to_socket, args=(server,))
             listener_thread.start()
@@ -76,14 +76,17 @@ if __name__ == '__main__':
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, TCP_PORT))
     server.listen(1) 
-    
+    # tentar colocar para fechar quando o usuário inserir off e abrir quando tiver em on
+
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     
     entrada = input("Dispositivo já foi instalado no broker? (S/N)\n>> ")
     if entrada.lower() == "n":
         NOME = input("Qual o nome deste dispositivo? >> ")
         MEDICAO = input("Que tipo de medição este dispositivo faz? >> ")
-        envia_porta_para_broker(SERVER_IP, TCP_PORT, NOME, MEDICAO)
+        envia_porta_para_broker(SERVER_IP, TCP_PORT, NOME, MEDICAO, sock)
     
-    habilita_desabilita_conexao(server)
+    habilita_desabilita_conexao(server, TCP_PORT)
+
+    server.close()
     

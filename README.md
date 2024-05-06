@@ -44,7 +44,9 @@ Para emular o dispositivo, abra outro terminal e navegue no diretório clonado:
 - sudo docker run --network='host' -it --name container_sensor sensor
 
 Para exibir a aplicação, abra outro terminal e navegue no diretório clonado:
-- python3 internet-of-things/aplicacao/main.py
+- cd internet-of-things/aplicacao/
+- sudo docker build -t aplicacao .
+- sudo docker run --network='host' -it -u=$(id -u $USER):$(id -g $USER) -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v --rm aplicacao
 
 Se quiser testar a API independente da aplicação, execute no terminal:
 - curl http://localhost:8000/api/

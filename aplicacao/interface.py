@@ -48,27 +48,30 @@ class Application(tk.Tk):
         self.result_label.pack()
 
     def handle_option(self):
-        option = self.menu_options.get()
-        device_id = self.device_id_entry.get()
-        if option == "Ver dispositivos disponíveis":
-            self.show_devices()
-        elif option == "Ligar sensor":
-            if device_id.isdigit():
-                self.turn_on_sensor(device_id)
-            else:
-                messagebox.showerror("Erro", "O ID do dispositivo deve ser um número.")
-        elif option == "Desligar sensor":
-            if device_id.isdigit():
-                self.turn_off_sensor(device_id)
-            else:
-                messagebox.showerror("Erro", "O ID do dispositivo deve ser um número.")
-        elif option == "Solicitar medição atual do sensor":
-            if device_id.isdigit():
-                self.request_sensor_measurement(device_id)
-            else:
-                messagebox.showerror("Erro", "O ID do dispositivo deve ser um número.")
-        elif option == "Ver IP do servidor (broker)":
-            self.show_server_ip()
+        try:
+            option = self.menu_options.get()
+            device_id = self.device_id_entry.get()
+            if option == "Ver dispositivos disponíveis":
+                self.show_devices()
+            elif option == "Ligar sensor":
+                if device_id.isdigit():
+                    self.turn_on_sensor(device_id)
+                else:
+                    messagebox.showerror("Erro", "O ID do dispositivo deve ser um número.")
+            elif option == "Desligar sensor":
+                if device_id.isdigit():
+                    self.turn_off_sensor(device_id)
+                else:
+                    messagebox.showerror("Erro", "O ID do dispositivo deve ser um número.")
+            elif option == "Solicitar medição atual do sensor":
+                if device_id.isdigit():
+                    self.request_sensor_measurement(device_id)
+                else:
+                    messagebox.showerror("Erro", "O ID do dispositivo deve ser um número.")
+            elif option == "Ver IP do servidor (broker)":
+                self.show_server_ip()
+        except requests.exceptions.ConnectionError:
+            messagebox.showerror("Erro", "Verifique se o servidor está conectado!")
 
     def desserializacao(self, lista_json):
         dispositivos = []
