@@ -20,7 +20,7 @@
 8. Gerenciamento do dispositivo;
 9. Desempenho (uso de cache no Broker, filas, threads, etc.);
 10. Confiabilidade da solução (tratamento das conexões);
-11. Emprego do Docker;
+11. Emprego do Docker (como executar);
 
 # Ferramentas utilizadas 
 
@@ -262,7 +262,7 @@ O sistema atende aos requisitos estabelecidos ao empregar protocolos de comunica
 
 Em relação a possíveis falhas de rede que possam afetar a comunicação, o sistema é capaz de lidar com essas situações. Por exemplo, se houver uma desconexão do cabo de rede, o sistema permanece em espera até que a conexão seja restabelecida, assegurando a continuidade das comunicações sem interrupções.
 
-# Emprego do Docker
+# Emprego do Docker (como executar)
 
 Siga os seguintes passos no terminal para executar o broker: 
 - ```git clone https://github.com/douglasojesus/internet-of-things```
