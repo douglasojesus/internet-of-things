@@ -70,6 +70,7 @@ class MyAPIView(APIView):
                         if dispositivo.esta_ativo:
                             if solicita_conexao(dispositivo, "dados"):
                                 addr, valor = recebe_conexao()
+                            print(valor)
                             if valor != 'dispositivo desligado':
                                 dispositivo.medicao_atual = valor
                             else:
