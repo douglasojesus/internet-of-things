@@ -123,7 +123,7 @@ class Application(tk.Tk):
         try:
             if 'value' in response.json():
                 self.result_label.config(text=f"Medição atual: {response.json()['value']}")
-            else if (response.content == 'dispositivo desligado'):
+            elif (response.content == 'dispositivo desligado'):
                 self.result_label.config(text=f"Dispositivo desligado.")
             else:
                 self.result_label.config(text=f"Erro: {response.json()}")
