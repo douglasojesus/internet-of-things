@@ -51,7 +51,7 @@ def listen_to_socket(server, dados_dispositivo):
                 else:
                     value = dados_dispositivo["medicao_atual"]
             else:
-                value = "dispositivo desligado"
+                value = "off"
         elif dados == "ligar":
             dados_dispositivo["status"] = True
             value = "ligado"

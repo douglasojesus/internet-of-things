@@ -122,8 +122,13 @@ class Application(tk.Tk):
         response = requests.post(self.url, data={"id": device_id, "comando": "dados"})
         try:
             if 'value' in response.json():
-                self.result_label.config(text=f"Medição atual: {response.json()['value']}")
-            elif (response.content == 'dispositivo desligado'):
+                if (response.json()['value'] == 'off'):
+                    self.result_label.config(text=f"Dispositivo desligado.")
+                else:
+                    self.result_label.config(text=f"Medição atual: {response.json()['value']}")
+            elif (response.json['value'] == 'off'):
+                self.result_label.config(text=f"Dispositivo desligado.")
+            elif (response.content == 'off'):
                 self.result_label.config(text=f"Dispositivo desligado.")
             else:
                 self.result_label.config(text=f"Erro: {response.json()}")
