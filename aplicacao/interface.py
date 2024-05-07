@@ -121,13 +121,12 @@ class Application(tk.Tk):
     def request_sensor_measurement(self, device_id):
         response = requests.post(self.url, data={"id": device_id, "comando": "dados"})
         try:
+            print(response.content)
             if 'value' in response.json():
                 if (response.json()['value'] == 'off'):
                     self.result_label.config(text=f"Dispositivo desligado.")
                 else:
                     self.result_label.config(text=f"Medição atual: {response.json()['value']}")
-            elif (response.json['value'] == 'off'):
-                self.result_label.config(text=f"Dispositivo desligado.")
             elif (response.content == 'off'):
                 self.result_label.config(text=f"Dispositivo desligado.")
             else:
