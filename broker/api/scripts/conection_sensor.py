@@ -18,7 +18,7 @@ def recebe_conexao():
     data, addr = server_udp.recvfrom(1024)
     print(f"Dados recebidos via UDP de {addr}: {data.decode()}")
     server_udp.close()
-    return addr, data
+    return addr, data.decode()
 
 """ Função que se comunica com o dispositivo via TCP. """
 def solicita_conexao(dispositivo, comando):
