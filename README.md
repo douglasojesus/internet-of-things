@@ -78,6 +78,50 @@
 
 <p align="justify">Do outro lado, o Broker recebe a primeira comunicação do dispositivo e registra os dados em uma cache. Quando é feito uma requisição através da API REST, os dados são removidos da cache e salvos no Banco de Dados. Essa foi uma escolha para melhorar o desempenho do servidor. Após salvo o dispositivo, o Broker enviará requisições TCP para o dispositivo com a porta e IP adicionados anteriormente. Essas requisições estarão de acordo com as requisições feitas pelo usuário através da API REST.</p>
 
+
++--------------+          +-------------+         +-------------------+
+|  Dispositivo |          |    Broker   |         | Aplicação (API    |
+|              |          |             |         | REST)             |
++------+-------+          +------+------+         +--------+----------+
+       |                          |                       |
+       | UDP communication        |                       |
+       |------------------------->|                       |
+       |                          |                       |
+       |    Initial connection    |                       |
+       |<------------------------ |                       |
+       |                          |                       |
+       |                          |  Cache data           |
+       |                          |  registration         |
+       |                          |  and TCP request      |
+       |                          |---------------------->|
+       |                          |                       |
+       |                          |                       |
+       |                          |  Handle API REST      |
+       |                          |  requests             |
+       |                          |<----------------------|
+       |                          |                       |
+       |                          |  Save data to DB      |
+       |                          |  and TCP request      |
+       |                          |<----------------------|
+       |                          |                       |
+       |                          |                       |
+       | TCP communication        |                       |
+       |<------------------------ |                       |
+       |                          |                       |
+       |   UDP response           |                       |
+       |------------------------> |                       |
+       |                          |                       |
+       |                          |                       |
+       |                          |  API request response |
+       |                          |---------------------->|
+       |                          |                       |
+       |                          |                       |
++------+-------+          +------+------+         +--------+----------+
+|  Dispositivo |          |    Broker   |         | Aplicação (API    |
+|              |          |             |         | REST)             |
++--------------+          +-------------+         +-------------------+
+
+
 ### Tabela de comunicação do dispositivo para o Broker
 
 | Tipo           | Conteúdo                            | Descrição                                | Formatação |
