@@ -74,6 +74,10 @@
 
 <p align="justify">Nesse modelo, o Broker assume o papel de servidor, fornecendo informações para aplicações (servidor HTTP) e dispositivos (servidor UDP). Ele permanece sempre ativo, recebendo solicitações iniciais dos dispositivos e gerenciando as requisições feitas pela interface do usuário, além de encaminhar essas solicitações aos dispositivos e retornar suas respostas. Do lado do dispositivo, ele também é um servidor, mas do tipo TCP, para escutar na porta dinâmica (registrada no momento de ligação do dispositivo) comandos recebidos do Broker.</p>
 
+<p align="center">
+  <img src="docs/imgs/diagrama_de_execucao.png" alt="Figura 2." width="650px">
+</p>
+
 <p align="justify">Inicialmente, o Dispositivo inicia uma comunicação UDP para estabelecer uma conexão com o Broker, enviando um nome, tipo de medição, porta e seu IP, que serão utilizados posteriormente. Após esse processo, o Dispositivo fica disponível para receber comandos do Broker, como o envio de dados.</p>
 
 <p align="justify">Do outro lado, o Broker recebe a primeira comunicação do dispositivo e registra os dados em uma cache. Quando é feito uma requisição através da API REST, os dados são removidos da cache e salvos no Banco de Dados. Essa foi uma escolha para melhorar o desempenho do servidor. Após salvo o dispositivo, o Broker enviará requisições TCP para o dispositivo com a porta e IP adicionados anteriormente. Essas requisições estarão de acordo com as requisições feitas pelo usuário através da API REST.</p>
@@ -97,11 +101,6 @@
 | Broker para Sensor | {'name': dispositivo.nome, 'command': 'turn off'} | Solicita que o dispositivo desligue. | JSON        |
 | Broker para Sensor | {'name': dispositivo.nome, 'command': 'data'}    | Solicita dados do dispositivo.      | JSON        |
 | Broker para Sensor | {'name': '', 'command': 'received'}               | Confirmação de recebimento.        | JSON        |
-
-
-<p align="center">
-  <img src="docs/imgs/diagrama_de_execucao.png" alt="Figura 2." width="700px">
-</p>
 
 ## Camada de transporte
 
