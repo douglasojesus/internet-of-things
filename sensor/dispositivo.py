@@ -11,11 +11,11 @@ MEU_IP = socket.gethostbyname(socket.gethostname())
 # Função para escutar conexão na porta TCP
 def recebe_conexao(server): 
     conexao, client_addr = server.accept()
-    data = conexao.recv(1024).decode()
+    data = conexao.recv(1024).decode() #{'name': dispositivo.nome, 'command': 'turn on'}
     print(f"Dispositivo conectado: {client_addr}") 
     print(f'Dados recebidos: {data}')
     conexao.close()
-    return client_addr, data
+    return client_addr, eval(data)
 
 # Função solicitar conexão na porta UDP
 def solicita_conexao(data, sock, SERVER_IP):
@@ -29,9 +29,10 @@ def envia_porta_para_broker(SERVER_IP, TCP_PORT, NOME, MEDICAO, sock):
         time.sleep(1)
         data = f"('{NOME}', '{MEDICAO}', {TCP_PORT}, '{MEU_IP}')"
         sock.sendto(data.encode(), (SERVER_IP, UDP_PORT_FIRST_CONNECTION))
-        recebido = recebe_conexao(server)
+        recebido = recebe_conexao(server) # {'name': '', 'command': 'received'}
         # Confirma recebimento
-        if recebido[1] == "recebido":
+        print(recebido, type(recebido))
+        if recebido[1]['command'] == "received":
             break
 
 # Função para gerar um número flutuante aleatório
@@ -43,23 +44,23 @@ def listen_to_socket(server, dados_dispositivo):
     while True:
         broker_info, dados = recebe_conexao(server)
         print(broker_info)
-        value = "comando inválido"
-        if dados == "dados":
+        data_to_send = {'name': dados_dispositivo['nome'], 'value': 'invalid command'}
+        if dados['command'] == "data":
             if dados_dispositivo["status"] == True:
                 if dados_dispositivo["valor_aleatorio"] == True:
-                    value = generate_number()
+                    data_to_send['value'] = generate_number()
                 else:
-                    value = dados_dispositivo["medicao_atual"]
+                    data_to_send['value'] = dados_dispositivo["medicao_atual"]
             else:
-                value = "off"
-        elif dados == "ligar":
+                data_to_send['value'] = "off"
+        elif dados['command'] == "turn on":
             dados_dispositivo["status"] = True
-            value = "ligado"
-        elif dados == "desligar":
+            data_to_send['value'] = "on"
+        elif dados['command'] == "turn off":
             dados_dispositivo["status"] = False
-            value = "desligado"
+            data_to_send['value'] = "off"
 
-        solicita_conexao(value, sock, SERVER_IP)
+        solicita_conexao(data_to_send, sock, SERVER_IP)
         print("Para exibir o menu novamente, basta clicar em enter.")
 
         time.sleep(1)

@@ -18,12 +18,12 @@ def recebe_conexao():
     data, addr = server_udp.recvfrom(1024)
     print(f"Dados recebidos via UDP de {addr}: {data.decode()}")
     server_udp.close()
-    return addr, data.decode()
+    return addr, eval(data.decode()) # format: {'name': '', 'value': ''}
 
 """ Função que se comunica com o dispositivo via TCP. """
 def solicita_conexao(dispositivo, comando):
     try:
-        data = f"{comando}"
+        data = f"{comando}" # format: {'name': dispositivo.nome, 'command': 'turn on'}
         sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock_tcp.connect((dispositivo.ip, dispositivo.porta))
         sock_tcp.sendall(data.encode())
@@ -40,8 +40,8 @@ def recebe_porta_do_dispositivo():
     server_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_udp.bind((HOST, UDP_PORT))
     data, addr = server_udp.recvfrom(1024)
-    is_recebido = "recebido"
-    data = eval(data)
+    is_recebido = {'name': '', 'command': 'received'}
+    data = eval(data) 
     sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock_tcp.connect((data[2], data[1]))
     sock_tcp.sendall(is_recebido.encode())

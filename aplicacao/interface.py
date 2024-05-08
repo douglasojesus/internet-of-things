@@ -109,19 +109,21 @@ class Application(tk.Tk):
 
     # Envia um comando para ligar o sensor
     def turn_on_sensor(self, device_id):
+        
         response = requests.post(self.url, data={"id": device_id, "comando": "ligar"})
-        self.handle_response(response, "ligado")
+        print(response, response.content, response.json()['value'])
+        self.handle_response(response, "on")
 
     # Envia um comando para desligar o sensor
     def turn_off_sensor(self, device_id):
         response = requests.post(self.url, data={"id": device_id, "comando": "desligar"})
-        self.handle_response(response, "desligado")
+        self.handle_response(response, "off")
 
     # Solicita a medição atual do sensor
     def request_sensor_measurement(self, device_id):
         response = requests.post(self.url, data={"id": device_id, "comando": "dados"})
         try:
-            print(response.content)
+            
             if 'value' in response.json():
                 if (response.json()['value'] == 'off'):
                     self.result_label.config(text=f"Dispositivo desligado.")

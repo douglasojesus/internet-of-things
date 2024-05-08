@@ -10,7 +10,7 @@ UDP_PORT_FIRST_CONNECTION = 1028
 # Fila para escrita no arquivo cache.txt
 fila_cache = queue.Queue()
 
-# Função para consumir a fila e escrever no arquivo cache.txt
+# Função para consumir a fila de conexões primárias e escrever no arquivo cache.txt
 def escrever_cache():
     while True:
         data = fila_cache.get()
@@ -18,6 +18,7 @@ def escrever_cache():
             arquivo.write(f"{data}\n")
         fila_cache.task_done()
 
+     
 # Função para receber dados do dispositivo e adicionar na fila de escrita
 def recebe_porta_do_dispositivo():
     while True:
@@ -32,7 +33,7 @@ def recebe_porta_do_dispositivo():
         sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         print("Received data: ", data)
         sock_tcp.connect((data[3], data[2])) # (ip, porta)
-        sock_tcp.sendall("recebido".encode())
+        sock_tcp.sendall("{'name': '', 'command': 'received'}".encode())
         server_udp.close()
 
         fila_cache.put(f"('{data[0]}', '{data[1]}', {data[2]}, '{data[3]}')")

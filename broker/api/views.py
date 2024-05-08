@@ -55,27 +55,27 @@ class MyAPIView(APIView):
                 dispositivo = Dispositivo.objects.get(pk=dispositivo_id)
                 try:
                     if dados.get('comando') == "ligar":
-                        if solicita_conexao(dispositivo, "ligar"):
-                            addr, valor = recebe_conexao()
+                        if solicita_conexao(dispositivo, {'name': dispositivo.nome, 'command': 'turn on'}):
+                            addr, valor = recebe_conexao() # format: {'name': '', 'value': ''}
                         dispositivo.esta_ativo = True
                         dispositivo.save()
-                        return Response({'value': valor}, status=status.HTTP_201_CREATED)
+                        return Response({'value': valor['value']}, status=status.HTTP_201_CREATED)
                     elif dados.get('comando') == 'desligar':
-                        if solicita_conexao(dispositivo, "desligar"):
-                            addr, valor = recebe_conexao()
+                        if solicita_conexao(dispositivo, {'name': dispositivo.nome, 'command': 'turn off'}):
+                            addr, valor = recebe_conexao() # format: {'name': '', 'value': ''}
                         dispositivo.esta_ativo = False
                         dispositivo.save()
-                        return Response({'value': valor}, status=status.HTTP_201_CREATED)
+                        return Response({'value': valor['value']}, status=status.HTTP_201_CREATED)
                     elif dados.get('comando') == 'dados':
                         if dispositivo.esta_ativo:
-                            if solicita_conexao(dispositivo, "dados"):
-                                addr, valor = recebe_conexao()
-                            if (valor != 'off'):
-                                dispositivo.medicao_atual = valor
+                            if solicita_conexao(dispositivo, {'name': dispositivo.nome, 'command': 'data'}):
+                                addr, valor = recebe_conexao() # format: {'name': '', 'value': ''}
+                            if (valor['value'] != 'off'):
+                                dispositivo.medicao_atual = valor['value']
                             else:
                                 dispositivo.esta_ativo = False
                             dispositivo.save()
-                            return Response({'value': valor}, status=status.HTTP_201_CREATED)     
+                            return Response({'value': valor['value']}, status=status.HTTP_201_CREATED)     
                         else:
                             return Response({'error': 'Dispositivo esta desligado.'})      
                     else:
