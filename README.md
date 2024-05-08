@@ -100,7 +100,7 @@
 
 
 <p align="center">
-  <img src="docs/imgs/diagrama_de_execucao.png" alt="Figura 2.">
+  <img src="docs/imgs/diagrama_de_execucao.png" alt="Figura 2." width="400px">
 </p>
 
 ## Camada de transporte
