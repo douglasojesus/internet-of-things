@@ -78,6 +78,28 @@
 
 <p align="justify">Do outro lado, o Broker recebe a primeira comunicação do dispositivo e registra os dados em uma cache. Quando é feito uma requisição através da API REST, os dados são removidos da cache e salvos no Banco de Dados. Essa foi uma escolha para melhorar o desempenho do servidor. Após salvo o dispositivo, o Broker enviará requisições TCP para o dispositivo com a porta e IP adicionados anteriormente. Essas requisições estarão de acordo com as requisições feitas pelo usuário através da API REST.</p>
 
+### Tabela de comunicação do dispositivo para o Broker
+
+| Tipo           | Conteúdo                            | Descrição                                | Formatação |
+|----------------|-------------------------------------|------------------------------------------|------------|
+| Sensor para Broker | {'name': dispositivo.nome, 'value': 'invalid command'} | Resposta a um comando inválido.      | JSON       |
+| Sensor para Broker | {'name': dispositivo.nome, 'value': Float}           | Dados enviados pelo sensor.          | JSON       |
+| Sensor para Broker | {'name': dispositivo.nome, 'value': 'off'}         | Indica que o dispositivo está desligado. | JSON       |
+| Sensor para Broker | {'name': dispositivo.nome, 'value': 'on'}          | Indica que o dispositivo está ligado.    | JSON       |
+| Sensor para Broker | {'name': nome, 'value': (NOME, TIPO_MEDICAO, TCP_PORT, MEU_IP)} | Informações do sensor | JSON |
+
+
+### Tabela de comunicação do Broker para o dispositivo
+
+| Tipo             | Conteúdo                                | Descrição                         | Formatação  |
+|------------------|-----------------------------------------|-----------------------------------|-------------|
+| Broker para Sensor | {'name': dispositivo.nome, 'command': 'turn on'} | Solicita que o dispositivo ligue.  | JSON        |
+| Broker para Sensor | {'name': dispositivo.nome, 'command': 'turn off'} | Solicita que o dispositivo desligue. | JSON        |
+| Broker para Sensor | {'name': dispositivo.nome, 'command': 'data'}    | Solicita dados do dispositivo.      | JSON        |
+| Broker para Sensor | {'name': '', 'command': 'received'}               | Confirmação de recebimento.        | JSON        |
+
+
+
 ## Camada de transporte
 
 <p align="justify">Na camada de transporte, a integração entre os dispositivos e o Broker foi realizada por meio de protocolos específicos, como solicitados no problema inicial. A seguir, descrevo detalhadamente a dinâmica dessa interação entre os dispositivos e o Broker:</p>
