@@ -86,7 +86,7 @@
 | Sensor para Broker | {'name': dispositivo.nome, 'value': Float}           | Dados enviados pelo sensor.          | JSON       |
 | Sensor para Broker | {'name': dispositivo.nome, 'value': 'off'}         | Indica que o dispositivo está desligado. | JSON       |
 | Sensor para Broker | {'name': dispositivo.nome, 'value': 'on'}          | Indica que o dispositivo está ligado.    | JSON       |
-| Sensor para Broker | {'name': nome, 'value': (NOME, TIPO_MEDICAO, TCP_PORT, MEU_IP)} | Informações do sensor | JSON |
+| Sensor para Broker | {'name': nome, 'tipo': tipo_medicao, 'porta': tcp_port, 'ip': ip} | Informações do sensor | JSON |
 
 
 ### Tabela de comunicação do Broker para o dispositivo
